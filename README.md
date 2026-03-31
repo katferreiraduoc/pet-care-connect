@@ -58,6 +58,7 @@ venv\Scripts\Activate.ps1
 ```bash
 venv\Scripts\activate.bat
 ```
+
 ---
 
 ## 📦 Instalar dependencias
@@ -65,47 +66,50 @@ venv\Scripts\activate.bat
 ```bash
 pip install -r requirements.txt
 ```
+
 ---
 
 ## 🔐 Variables de entorno
 
-Crear un archivo .env en la raíz del proyecto con el siguiente contenido:
+Crear un archivo `.env` en la raíz del proyecto con el siguiente contenido:
+
 ```env
 DB_NAME=pet_care_connect
 DB_USER=petcare_app
 DB_PASSWORD=tu_password
 ```
+
 Este archivo es local y no debe subirse al repositorio.
 
-Asegúrate de que .env esté incluido en .gitignore.
+Asegúrate de que `.env` esté incluido en `.gitignore`.
+
 ---
-🗄️ Configuración de base de datos (MySQL)
-1. Crear la base de datos
 
-Ejecutar el script ubicado en:
+## 🗄️ Configuración de base de datos (MySQL)
 
-docs/db/create-bd.sql
-
-Este script crea la base de datos pet_care_connect junto con todas sus tablas.
-
-2. Crear usuario de base de datos
+### 1. Crear usuario de base de datos
 
 Ejecutar en MySQL:
-```bash
+
+```sql
 CREATE USER 'petcare_app'@'localhost' IDENTIFIED BY 'TuPasswordSegura123!';
 GRANT ALL PRIVILEGES ON pet_care_connect.* TO 'petcare_app'@'localhost';
 FLUSH PRIVILEGES;
 ```
-El user y pass es el que vas a ingresar en el archivo .env que creaste anteriormente en la sección "Variables de Entorno".
 
-3. Configurar conexión en Django
+El usuario y la contraseña deben coincidir con los valores configurados en el archivo `.env`.
+
+### 2. Configurar conexión en Django
 
 Editar el archivo:
 
+```text
 petcare/settings.py
+```
 
-Y reemplazar la configuración de base de datos por:
-```bash
+Y usar la configuración de base de datos con variables de entorno:
+
+```python
 from decouple import config
 
 DATABASES = {
@@ -122,16 +126,16 @@ DATABASES = {
     }
 }
 ```
----
 
-## Migraciones
+### 3. Crear estructura de base de datos con Django
 
-Una vez configurada la conexión a MySQL y creado el archivo .env, ejecutar:
+Una vez configurada la conexión a MySQL y creado el archivo `.env`, ejecutar:
 
 ```bash
 python manage.py migrate
 ```
-Si todo está correcto, Django aplicará o verificará sus migraciones internas en la base de datos.
+
+Si todo está correcto, Django aplicará las migraciones y creará la estructura necesaria en la base de datos.
 
 ---
 
@@ -139,10 +143,23 @@ Si todo está correcto, Django aplicará o verificará sus migraciones internas 
 
 El proyecto está organizado en las siguientes apps:
 
-- **usuarios**: Rol, Usuario
-- **mascotas**: Mascota, Alimentacion
-- **citas**: Cita
-- **tratamientos**: Tratamiento
+* **usuarios**: Rol, Usuario
+* **mascotas**: Mascota, Alimentacion, Vacuna, Recordatorio
+* **citas**: Cita, AtencionMedica
+* **tratamientos**: Tratamiento
+
+Los roles iniciales (`Admin`, `Veterinario`, `Cliente`) se cargan automáticamente mediante migraciones.
+
+---
+
+## 📄 Documentación de base de datos
+
+En la carpeta `docs/db/` se conservan archivos referenciales del diseño original:
+
+* `create-bd.sql`
+* `db-diagram.png`
+
+Estos archivos sirven como apoyo documental del MER, pero la estructura actual del proyecto se gestiona mediante modelos y migraciones de Django.
 
 ---
 
@@ -175,7 +192,7 @@ git checkout -b feature/registro-usuario
 
 ## 📁 Estructura del proyecto
 
-```
+```text
 pet-care-connect/
 │
 ├── docs/
@@ -192,6 +209,7 @@ pet-care-connect/
 ├── .gitignore
 └── README.md
 ```
+
 ---
 
 ## 💡 Notas
