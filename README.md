@@ -63,11 +63,8 @@ venv\Scripts\activate.bat
 ## 📦 Instalar dependencias
 
 ```bash
-pip install django
+pip install -r requirements.txt
 ```
-
-> Más adelante se utilizará un `requirements.txt`
-
 ---
 
 ## Migraciones
