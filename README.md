@@ -107,12 +107,17 @@ git checkout -b feature/registro-usuario
 ```
 pet-care-connect/
 │
-├── petcare/
+├── docs/
+│   └── db/
+│       ├── create-bd.sql      # Script de creación de base de datos en MySQL
+│       └── db-diagram.png     # Diagrama entidad-relación de la base de datos
+│
+├── petcare/                   # Configuración principal del proyecto Django
 ├── manage.py
-├── venv/
+├── requirements.txt
+├── .gitignore
 └── README.md
 ```
-
 ---
 
 ## 💡 Notas
