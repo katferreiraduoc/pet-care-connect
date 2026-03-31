@@ -137,16 +137,12 @@ Si todo está correcto, Django aplicará o verificará sus migraciones internas 
 
 ## 🧩 Modelo de datos actual
 
-El proyecto incluye las siguientes entidades principales:
+El proyecto está organizado en las siguientes apps:
 
-* **Rol**: define los tipos de usuario (Admin, Veterinario, Cliente)
-* **Usuario**: modelo personalizado basado en AbstractUser
-* **Mascota**: asociada a un usuario
-* **Cita**: asociada a una mascota
-* **Tratamiento**: asociado a una cita
-* **Alimentacion**: asociada a una mascota
-
-Estas relaciones representan la base del sistema de gestión de mascotas y su historial clínico.
+- **usuarios**: Rol, Usuario
+- **mascotas**: Mascota, Alimentacion
+- **citas**: Cita
+- **tratamientos**: Tratamiento
 
 ---
 
@@ -184,10 +180,13 @@ pet-care-connect/
 │
 ├── docs/
 │   └── db/
-│       ├── create-bd.sql      # Script de creación de base de datos en MySQL
-│       └── db-diagram.png     # Diagrama entidad-relación de la base de datos
-│
-├── petcare/                   # Configuración principal del proyecto Django
+│       ├── create-bd.sql
+│       └── db-diagram.png
+├── usuarios/
+├── mascotas/
+├── citas/
+├── tratamientos/
+├── petcare/
 ├── manage.py
 ├── requirements.txt
 ├── .gitignore
