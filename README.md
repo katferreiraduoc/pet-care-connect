@@ -70,7 +70,7 @@ pip install -r requirements.txt
 ## 🔐 Variables de entorno
 
 Crear un archivo .env en la raíz del proyecto con el siguiente contenido:
-```bash
+```env
 DB_NAME=pet_care_connect
 DB_USER=petcare_app
 DB_PASSWORD=tu_password
@@ -96,7 +96,7 @@ CREATE USER 'petcare_app'@'localhost' IDENTIFIED BY 'TuPasswordSegura123!';
 GRANT ALL PRIVILEGES ON pet_care_connect.* TO 'petcare_app'@'localhost';
 FLUSH PRIVILEGES;
 ```
-El user y pass es el que vas a ingresar en el archivo .venv que creaste anteriormente en la sección "Variables de Entorno".
+El user y pass es el que vas a ingresar en el archivo .env que creaste anteriormente en la sección "Variables de Entorno".
 
 3. Configurar conexión en Django
 
