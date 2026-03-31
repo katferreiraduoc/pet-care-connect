@@ -47,3 +47,15 @@ class Tratamiento(models.Model):
 
     def __str__(self):
         return f"Tratamiento - {self.cita.mascota.nombre}"
+
+class Alimentacion(models.Model):
+    mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)
+    tipo_alimento = models.CharField(max_length=100, blank=True, null=True)
+    marca = models.CharField(max_length=100, blank=True, null=True)
+    cantidad = models.CharField(max_length=50, blank=True, null=True)
+    frecuencia = models.CharField(max_length=50, blank=True, null=True)
+    horario = models.CharField(max_length=100, blank=True, null=True)
+    observaciones = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.mascota.nombre} - {self.tipo_alimento}"
