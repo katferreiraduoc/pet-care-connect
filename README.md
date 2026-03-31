@@ -67,11 +67,71 @@ pip install -r requirements.txt
 ```
 ---
 
+## 🔐 Variables de entorno
+
+Crear un archivo .env en la raíz del proyecto con el siguiente contenido:
+```bash
+DB_NAME=pet_care_connect
+DB_USER=petcare_app
+DB_PASSWORD=tu_password
+```
+Este archivo es local y no debe subirse al repositorio.
+
+Asegúrate de que .env esté incluido en .gitignore.
+---
+🗄️ Configuración de base de datos (MySQL)
+1. Crear la base de datos
+
+Ejecutar el script ubicado en:
+
+docs/db/create-bd.sql
+
+Este script crea la base de datos pet_care_connect junto con todas sus tablas.
+
+2. Crear usuario de base de datos
+
+Ejecutar en MySQL:
+```bash
+CREATE USER 'petcare_app'@'localhost' IDENTIFIED BY 'TuPasswordSegura123!';
+GRANT ALL PRIVILEGES ON pet_care_connect.* TO 'petcare_app'@'localhost';
+FLUSH PRIVILEGES;
+```
+El user y pass es el que vas a ingresar en el archivo .venv que creaste anteriormente en la sección "Variables de Entorno".
+
+3. Configurar conexión en Django
+
+Editar el archivo:
+
+petcare/settings.py
+
+Y reemplazar la configuración de base de datos por:
+```bash
+from decouple import config
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
+    }
+}
+```
+---
+
 ## Migraciones
+
+Una vez configurada la conexión a MySQL y creado el archivo .env, ejecutar:
 
 ```bash
 python manage.py migrate
 ```
+Si todo está correcto, Django aplicará o verificará sus migraciones internas en la base de datos.
 
 ---
 
@@ -122,9 +182,15 @@ pet-care-connect/
 
 ## 💡 Notas
 
-* Asegúrate de tener Python instalado
+* Asegúrate de tener Python y MySQL instalados
 * Activar siempre el entorno virtual antes de trabajar
-* No subir la carpeta `venv/` al repositorio (ya incluido en gitignore)
+* No subir la carpeta `venv/` al repositorio
+* No subir el archivo `.env` al repositorio
+* Si agregas nuevas librerías, actualizar:
+
+```bash
+pip freeze > requirements.txt
+```
 
 ---
 
