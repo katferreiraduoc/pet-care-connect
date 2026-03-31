@@ -135,6 +135,21 @@ Si todo está correcto, Django aplicará o verificará sus migraciones internas 
 
 ---
 
+## 🧩 Modelo de datos actual
+
+El proyecto incluye las siguientes entidades principales:
+
+* **Rol**: define los tipos de usuario (Admin, Veterinario, Cliente)
+* **Usuario**: modelo personalizado basado en AbstractUser
+* **Mascota**: asociada a un usuario
+* **Cita**: asociada a una mascota
+* **Tratamiento**: asociado a una cita
+* **Alimentacion**: asociada a una mascota
+
+Estas relaciones representan la base del sistema de gestión de mascotas y su historial clínico.
+
+---
+
 ## Levantar el servidor
 
 ```bash
