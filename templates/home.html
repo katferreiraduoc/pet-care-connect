@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" class="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Pet Care Connect</title>
+
+<!-- CSS -->
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=Manrope:wght@200..800&display=swap" rel="stylesheet"/>
+
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-surface text-on-surface antialiased">
+
+<!-- NAVBAR -->
+<nav class="fixed top-0 w-full z-50 glass-nav shadow-sm">
+    <div class="flex justify-between items-center px-8 h-20 max-w-screen-2xl mx-auto">
+        <div class="text-2xl font-bold text-emerald-900">Pet Care Connect</div>
+
+        <div class="hidden md:flex items-center space-x-10">
+            <a class="nav-link active" href="#">Inicio</a>
+            <a class="nav-link" href="#">Servicios</a>
+            <a class="nav-link" href="#">Planes</a>
+            <a class="nav-link" href="#">Nosotros</a>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <button class="btn-login">Iniciar Sesión</button>
+            <button class="btn-primary">Registrarse</button>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<main class="pt-20">
+
+<section class="hero">
+
+    <!-- TEXTO -->
+    <div class="hero-text">
+
+        <h1>
+            Cuidado de corazón para tu compañero.
+        </h1>
+
+        <p>
+            Gestiona la salud, nutrición y bienestar de tu mascota en un entorno sereno diseñado para la tranquilidad de ambos.
+        </p>
+
+        <div class="hero-buttons">
+            <button class="btn-primary">Comenzar Ahora</button>
+        </div>
+    </div>
+
+    <!-- IMAGEN -->
+    <div class="hero-image">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7AgYrZ9ptFNoj2dyYIL7R7BUc-WPaBqzkN0ySordeZ7LGCGJUshZC7X44re7jS0SrhXzpWDauY6HE75P3yW_cqP3CZxwK7SS9Xwhn0QP2WeHnuEkL_-hDZC8-2ufA5RXezkNZJy1DZzsxIobHxXwP7f1J1dWPNqRsatLbahz-MM-42IT40INhJwrVqCOMHhr5rwkssBBJLoypUIIUZrFlGkjGrTbOd3TcqpniITlIsDRq98YP4Jd3BDRSev6UiuCCrEf6dc7R-QM" alt="Perro feliz">
+    </div>
+
+</section>
+<!-- FEATURES -->
+<section class="features">
+
+    <h2>Todo lo que tu compañero merece</h2>
+    <p class="subtitle">
+        Herramientas profesionales envueltas en una experiencia de usuario pacífica y eficiente.
+    </p>
+
+    <div class="cards">
+
+        <!-- CARD 1 -->
+        <div class="card">
+            <div class="icon-box icon-green">
+                <span class="material-symbols-outlined">clinical_notes</span>
+            </div>
+            <h3>Seguimiento Médico</h3>
+            <p>
+                Un historial clínico completo. Vacunas, desparasitaciones y alergias siempre a mano y bajo control total.
+            </p>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="card">
+            <div class="icon-box icon-blue">
+                <span class="material-symbols-outlined">calendar_month</span>
+            </div>
+            <h3>Citas y Turnos</h3>
+            <p>
+                Agenda visitas al veterinario o peluquería con recordatorios inteligentes.
+            </p>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="card">
+            <div class="icon-box icon-orange">
+                <span class="material-symbols-outlined">restaurant</span>
+            </div>
+            <h3>Registro de Dieta</h3>
+            <p>
+                Optimiza su nutrición. Controla ingestas y descubre la dieta perfecta.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <p>© 2026 Pet Care Connect</p>
+</footer>
+
+</body>
+</html>

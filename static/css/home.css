@@ -1,0 +1,280 @@
+body {
+    font-family: 'Manrope', sans-serif;
+}
+
+/* NAVBAR */
+.glass-nav {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
+}
+
+.nav-link {
+    color: #555;
+    font-weight: bold;
+}
+
+.nav-link.active {
+    color: #2c694e;
+}
+
+.btn-login {
+    color: #2c694e;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2c694e, #6ba889);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+}
+
+.btn-secondary {
+    background: #eee;
+    padding: 10px 20px;
+}
+
+.big {
+    padding: 15px 30px;
+}
+
+/* HERO */
+.hero {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+}
+
+.hero-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px;
+}
+
+.hero-text {
+    max-width: 500px;
+}
+
+.hero-text h1 {
+    font-size: 50px;
+}
+
+
+.badge {
+    background: #b1f0ce;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.hero-image img {
+    width: 500px;
+    border-radius: 20px;
+}
+
+/* FEATURES */
+.features {
+    text-align: center;
+    padding: 80px;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.card {
+    background: #f3f4f5;
+    padding: 30px;
+    border-radius: 20px;
+    width: 250px;
+}
+
+.icon {
+    font-size: 40px;
+    color: #2c694e;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    padding: 20px;
+    background: #eee;
+}
+
+/* FUENTES */
+body {
+    font-family: 'Manrope', sans-serif;
+}
+
+h1, h2, h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* SECCIÓN FEATURES */
+.features {
+    background: #f3f4f5;
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.features h2 {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.features p.subtitle {
+    color: #6b7280;
+    margin-bottom: 50px;
+}
+
+/* CONTENEDOR DE CARDS */
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 25px;
+    width: 300px;
+    text-align: left;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+/* HOVER */
+.card:hover {
+    transform: translateY(-8px);
+}
+
+/* ICONO */
+.icon-box {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* COLORES DE ICONOS */
+.icon-green {
+    background: #e6f4ea;
+    color: #2c694e;
+}
+
+.icon-blue {
+    background: #e3f2fd;
+    color: #2b6485;
+}
+
+.icon-orange {
+    background: #fff3e0;
+    color: #8e4e14;
+}
+
+/* TEXTO */
+.card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* HERO */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 120px 80px;
+    gap: 40px;
+}
+
+/* TEXTO IZQUIERDA */
+.hero-text {
+    max-width: 600px;
+}
+
+.hero-text span {
+    background: #d1fae5;
+    color: #2c694e;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* TITULO GRANDE */
+.hero-text h1 {
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 20px 0;
+}
+
+/* palabra destacada */
+.hero-text h1 .highlight {
+    color: #2c694e;
+}
+
+/* texto descriptivo */
+.hero-text p {
+    font-size: 16px;
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+/* BOTONES */
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-primary {
+    background: #2c694e;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-weight: 700;
+    border: none;
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-weight: 600;
+    border: none;
+}
+
+/* IMAGEN DERECHA */
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end; /* 👈 empuja la imagen a la derecha */
+}
+
+.hero-image img {
+    width: 480px;
+    border-radius: 30px;
+    transform: rotate(2deg);
+    transition: 0.5s;
+}
+
+.hero-image img:hover {
+    transform: rotate(0deg);
+}
