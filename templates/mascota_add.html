@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Añadir Mascota{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/mascota_add.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<div class="contenedor-form">
+
+    <!-- TÍTULO -->
+    <div class="form-header">
+        <h2>Añadir Nueva Mascota</h2>
+        <p>Completa el perfil de tu compañero para recibir seguimiento de salud.</p>
+    </div>
+
+    <div class="grid-form">
+
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="col-izq">
+
+            <div class="card-foto">
+                <div class="foto-circle">
+                    <span class="material-symbols-outlined">add_a_photo</span>
+                </div>
+
+                <h3>Foto de Perfil</h3>
+                <div class ="texto-avatar">
+                <p>Sube una imagen clara para que podamos identificar a tu mascota fácilmente.</p>
+                </div>    
+                <button class="btn-primary">Subir Imagen</button>
+            </div>
+
+            <div class="card consejo">
+                <h4>Consejo</h4>
+                <p>El peso ayuda a calcular dieta y medicamentos automáticamente.</p>
+            </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div class="col-der">
+
+            <!-- INFORMACIÓN BÁSICA -->
+            <div class="card-info">
+                
+                <span class="material-symbols-outlined text-primary" data-icon="badge">badge</span>
+                <h3 class="text-xl font-bold font-headline">Información Básica</h3>
+
+                <label>Nombre</label>
+                <input type="text" placeholder="Ej. Luna">
+
+                <div class="row">
+                    <div>
+                        <label>Especie</label>
+                        <select>
+                            <option>Perro</option>
+                            <option>Gato</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Raza</label>
+                        <input type="text" placeholder="Ej. Golden Retriever">
+                    </div>
+                </div>
+            </div>
+
+            <!-- DETALLES -->
+            <div class="card-detalles">
+                <h3>Detalles Vitales</h3>
+
+                <div class="row">
+                    <div>
+                        <label>Fecha</label>
+                        <input type="date">
+                    </div>
+
+                    <div>
+                        <label>Género</label>
+                    <div class="radio-group">
+                        <button type="button" class="btn-genero" data-genero="macho">Macho</button>
+                        <button type="button" class="btn-genero" data-genero="hembra">Hembra</button>
+                    </div>
+
+<input type="hidden" name="genero" id="genero">
+                    </div>
+                </div>
+
+                <label>Peso (kg)</label>
+
+                <div class="peso-container">
+                    <input type="range" id="peso" min="0" max="50" step="0.1" value="12.5">
+                    <span id="pesoValor">12.5</span>
+                </div>
+            </div>
+
+            <!-- BOTONES -->
+            <div class="acciones">
+                <button class="btn-secundario">Cancelar</button>
+                <button class="btn-primary">Guardar Mascota</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="{% static 'js/mascota_add.js' %}"></script>
+
+{% endblock %}
+

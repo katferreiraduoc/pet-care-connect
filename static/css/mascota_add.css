@@ -1,0 +1,166 @@
+.contenedor-form {
+    padding: 40px;
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* HEADER */
+.form-header h2 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.form-header p {
+    color: #6b7280;
+}
+
+/* GRID */
+.grid-form {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+/* CARDS */
+.card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+/* FOTO */
+.foto {
+    text-align: center;
+}
+
+.foto-circle {
+    width: 150px;
+    height: 150px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* CONSEJO */
+.consejo {
+    background: #ffe4cc;
+}
+
+/* INPUTS */
+input, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #f3f4f6;
+    margin-top: 5px;
+}
+
+label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #6b7280;
+}
+
+/* ROW */
+.row {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* BOTONES */
+.btn-primary {
+    background: #2c694e;
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-secundario {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+/* ACCIONES */
+.acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.texto-avatar {
+    padding-bottom: 20px ;
+}
+
+.card-info {
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    margin-bottom: 35px;
+}
+
+.card-detalles {
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.card-foto {
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    align-items: center;
+    flex-direction: column;
+    display: flex;
+}
+
+.peso-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#peso {
+    flex: 1;
+}
+
+#pesoValor {
+    background: #f3f4f6;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: #2c694e;
+    min-width: 60px;
+    text-align: center;
+}
+
+.btn-genero {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #e5e7eb;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-genero.activo {
+    background: #2c694e;
+    color: white;
+}

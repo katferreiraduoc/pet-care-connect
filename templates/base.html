@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Pet Care{% endblock %}</title>
+
+<!-- FUENTES -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+<!-- ICONOS -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+{% block extra_css %}
+{% endblock %}
+
+</head>
+
+<body class="app-body">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+    <div class="logo">
+        <h1>Pet Care Connect</h1>
+    </div>
+
+    <nav class="menu">
+
+    <a href="{% url 'panel_control' %}" 
+        class="{% if request.resolver_match.url_name == 'panel_control' %}active{% endif %}">
+        <span class="material-symbols-outlined">dashboard</span>
+        Panel de Control
+    </a>
+
+    <a href="{% url 'agregar_mascota' %}" 
+        class="{% if request.resolver_match.url_name == 'agregar_mascota' %}active{% endif %}">
+        <span class="material-symbols-outlined">pets</span>
+        Agregar Mascota
+    </a>
+
+    <a href="{% url 'mis_mascotas' %}" 
+        class="{% if request.resolver_match.url_name == 'mis_mascotas' %}active{% endif %}">
+        <span class="material-symbols-outlined">pet_supplies</span>
+        Mis Mascotas
+    </a>
+
+    <a href="{% url 'registros_medicos' %}" 
+        class="{% if request.resolver_match.url_name == 'registros_medicos' %}active{% endif %}">
+        <span class="material-symbols-outlined">medical_services</span>
+        Registros Médicos
+    </a>
+
+    <a href="{% url 'citas' %}" 
+        class="{% if request.resolver_match.url_name == 'citas' %}active{% endif %}">
+        <span class="material-symbols-outlined">event</span>
+        Citas
+    </a>
+
+    <a href="{% url 'dieta' %}" 
+        class="{% if request.resolver_match.url_name == 'dieta' %}active{% endif %}">
+        <span class="material-symbols-outlined">restaurant</span>
+        Dieta
+    </a>
+
+</nav>
+
+    <div class="bottom-menu">
+        <a href="#">
+            <span class="material-symbols-outlined">settings</span>
+            Ajustes
+        </a>
+
+        <a href="#">
+            <span class="material-symbols-outlined">logout</span>
+            Cerrar sesión
+        </a>
+    </div>
+
+</aside>
+
+<!-- CONTENIDO -->
+<div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+
+        <div class="search">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text" placeholder="Buscar...">
+        </div>
+
+        <div class="top-actions">
+
+            <span class="material-symbols-outlined icon">notifications</span>
+            <span class="material-symbols-outlined icon">help</span>
+
+            <div class="user">
+                <div>
+                    <strong>User</strong>
+                    <p>Cuidador</p>
+                </div>
+                <img src="https://i.pravatar.cc/40">
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- CONTENIDO DINÁMICO -->
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</div>
+
+</body>
+</html>
