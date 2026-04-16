@@ -8,19 +8,24 @@
 {% endblock %}
 
 {% block content %}
-
-
 <div class="contenedor-form">
 
-    <!-- TÍTULO -->
     <div class="form-header">
         <h2>Añadir Nueva Mascota</h2>
         <p>Completa el perfil de tu compañero para recibir seguimiento de salud.</p>
     </div>
 
-    <div class="grid-form">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-        <!-- COLUMNA IZQUIERDA -->
+    <form method="post" class="grid-form">
+        {% csrf_token %}
+
         <div class="col-izq">
 
             <div class="card-foto">
@@ -29,10 +34,10 @@
                 </div>
 
                 <h3>Foto de Perfil</h3>
-                <div class ="texto-avatar">
-                <p>Sube una imagen clara para que podamos identificar a tu mascota fácilmente.</p>
-                </div>    
-                <button class="btn-primary">Subir Imagen</button>
+                <div class="texto-avatar">
+                    <p>Sube una imagen clara para que podamos identificar a tu mascota fácilmente.</p>
+                </div>
+                <button type="button" class="btn-primary" disabled>Próximamente</button>
             </div>
 
             <div class="card consejo">
@@ -40,78 +45,101 @@
                 <p>El peso ayuda a calcular dieta y medicamentos automáticamente.</p>
             </div>
 
+            {% if form.non_field_errors %}
+            <div class="card form-feedback">
+                {% for error in form.non_field_errors %}
+                <p class="field-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
         </div>
 
-        <!-- COLUMNA DERECHA -->
         <div class="col-der">
 
-            <!-- INFORMACIÓN BÁSICA -->
             <div class="card-info">
-                
                 <span class="material-symbols-outlined text-primary" data-icon="badge">badge</span>
                 <h3 class="text-xl font-bold font-headline">Información Básica</h3>
 
-                <label>Nombre</label>
-                <input type="text" placeholder="Ej. Luna">
+                <label for="{{ form.nombre.id_for_label }}">Nombre</label>
+                {{ form.nombre }}
+                {% for error in form.nombre.errors %}
+                <p class="field-error">{{ error }}</p>
+                {% endfor %}
 
                 <div class="row">
                     <div>
-                        <label>Especie</label>
-                        <select>
-                            <option>Perro</option>
-                            <option>Gato</option>
-                        </select>
+                        <label for="{{ form.especie.id_for_label }}">Especie</label>
+                        {{ form.especie }}
+                        {% for error in form.especie.errors %}
+                        <p class="field-error">{{ error }}</p>
+                        {% endfor %}
                     </div>
 
                     <div>
-                        <label>Raza</label>
-                        <input type="text" placeholder="Ej. Golden Retriever">
+                        <label for="{{ form.raza.id_for_label }}">Raza</label>
+                        {{ form.raza }}
+                        {% for error in form.raza.errors %}
+                        <p class="field-error">{{ error }}</p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
 
-            <!-- DETALLES -->
             <div class="card-detalles">
                 <h3>Detalles Vitales</h3>
 
                 <div class="row">
                     <div>
-                        <label>Fecha</label>
-                        <input type="date">
+                        <label for="{{ form.fecha_nacimiento.id_for_label }}">Fecha Nacimiento</label>
+                        {{ form.fecha_nacimiento }}
+                        {% for error in form.fecha_nacimiento.errors %}
+                        <p class="field-error">{{ error }}</p>
+                        {% endfor %}
                     </div>
 
                     <div>
                         <label>Género</label>
-                    <div class="radio-group">
-                        <button type="button" class="btn-genero" data-genero="macho">Macho</button>
-                        <button type="button" class="btn-genero" data-genero="hembra">Hembra</button>
-                    </div>
-
-<input type="hidden" name="genero" id="genero">
+                        <div class="radio-group">
+                            <button type="button" class="btn-genero {% if form.sexo.value == 'macho' or not form.sexo.value %}activo{% endif %}" data-genero="macho">Macho</button>
+                            <button type="button" class="btn-genero {% if form.sexo.value == 'hembra' %}activo{% endif %}" data-genero="hembra">Hembra</button>
+                        </div>
+                        {{ form.sexo }}
+                        {% for error in form.sexo.errors %}
+                        <p class="field-error">{{ error }}</p>
+                        {% endfor %}
                     </div>
                 </div>
 
-                <label>Peso (kg)</label>
+                <label for="{{ form.peso.id_for_label }}">Peso (kg)</label>
 
                 <div class="peso-container">
-                    <input type="range" id="peso" min="0" max="50" step="0.1" value="12.5">
-                    <span id="pesoValor">12.5</span>
+                    {{ form.peso }}
+                    <input
+                        type="number"
+                        id="pesoManual"
+                        class="peso-manual"
+                        min="1"
+                        max="50"
+                        step="0.1"
+                        value="{{ form.peso.value|default:'12.5' }}"
+                    >
                 </div>
+                {% for error in form.peso.errors %}
+                <p class="field-error">{{ error }}</p>
+                {% endfor %}
             </div>
 
-            <!-- BOTONES -->
             <div class="acciones">
-                <button class="btn-secundario">Cancelar</button>
-                <button class="btn-primary">Guardar Mascota</button>
+                <a class="btn-secundario" href="{% url 'panel_control' %}">Cancelar</a>
+                <button type="submit" class="btn-primary">Guardar Mascota</button>
             </div>
 
         </div>
 
-    </div>
+    </form>
 
 </div>
 
 <script src="{% static 'js/mascota_add.js' %}"></script>
-
 {% endblock %}
-

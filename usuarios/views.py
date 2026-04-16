@@ -1,4 +1,5 @@
 from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
 from django.shortcuts import redirect, render
 
 from .forms import CustomAuthenticationForm, RegistroUsuarioForm
@@ -8,6 +9,7 @@ def home(request):
 
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
+    next_page = reverse_lazy("mis_mascotas")
     template_name = 'usuarios/login.html'
 
 
