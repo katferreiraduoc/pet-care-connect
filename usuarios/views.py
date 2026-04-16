@@ -1,12 +1,13 @@
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 
-from .forms import RegistroUsuarioForm
+from .forms import CustomAuthenticationForm, RegistroUsuarioForm
 
 def home(request):
     return render(request, 'home.html')
 
 class CustomLoginView(LoginView):
+    authentication_form = CustomAuthenticationForm
     template_name = 'usuarios/login.html'
 
 

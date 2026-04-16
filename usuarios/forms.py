@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 from .models import Rol, Usuario
 
@@ -53,3 +53,20 @@ class RegistroUsuarioForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class CustomAuthenticationForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        placeholders = {
+            "username": "Ingresa tu usuario",
+            "password": "Ingresa tu contraseña",
+        }
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update(
+                {
+                    "class": "form-input",
+                    "placeholder": placeholders.get(field_name, ""),
+                }
+            )

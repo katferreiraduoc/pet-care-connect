@@ -1,0 +1,228 @@
+body.login-body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Manrope', sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(210, 236, 224, 0.95), transparent 34%),
+        linear-gradient(180deg, #f6fbf8 0%, #edf5f0 100%);
+    color: #1a3328;
+}
+
+a {
+    text-decoration: none;
+}
+
+.login-shell {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+.login-layout {
+    width: min(1080px, 100%);
+    display: grid;
+    grid-template-columns: 1fr 440px;
+    gap: 28px;
+    align-items: center;
+}
+
+.login-side {
+    padding: 20px 8px;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 22px;
+    color: #2c694e;
+    font-weight: 700;
+}
+
+.eyebrow {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #dff1e7;
+    color: #2c694e;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.login-side h1 {
+    margin: 18px 0 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.6rem);
+    line-height: 1.08;
+    max-width: 620px;
+}
+
+.login-side p {
+    max-width: 580px;
+    color: #5c7267;
+    font-size: 1.03rem;
+    line-height: 1.7;
+}
+
+.side-card,
+.login-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(170, 204, 186, 0.45);
+    border-radius: 28px;
+    box-shadow: 0 24px 48px rgba(44, 105, 78, 0.08);
+    backdrop-filter: blur(10px);
+}
+
+.side-card {
+    max-width: 460px;
+    margin-top: 26px;
+    padding: 26px;
+}
+
+.icon-badge,
+.login-card-header .material-symbols-outlined {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: #e8f4ed;
+    color: #2c694e;
+}
+
+.side-card h2,
+.login-card h2 {
+    margin: 16px 0 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.side-card p {
+    margin: 0;
+}
+
+.login-card {
+    padding: 28px;
+}
+
+.login-card-header {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.login-card-header p {
+    margin: 4px 0 0;
+    color: #607368;
+}
+
+.login-form {
+    display: grid;
+    gap: 18px;
+}
+
+.field-group {
+    display: grid;
+    gap: 8px;
+}
+
+.field-group label {
+    color: #567064;
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.form-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: 1px solid #d8e7de;
+    border-radius: 16px;
+    background: #f7fbf8;
+    color: #183126;
+    font: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #5f997e;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(95, 153, 126, 0.15);
+}
+
+.form-errors {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #fff2f2;
+    color: #a94444;
+}
+
+.form-errors p,
+.field-error {
+    margin: 0;
+}
+
+.field-error {
+    color: #b44949;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 14px 24px;
+    border-radius: 16px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    background: linear-gradient(135deg, #2c694e, #5d9a7c);
+    color: #ffffff;
+    box-shadow: 0 14px 30px rgba(44, 105, 78, 0.2);
+}
+
+.register-link {
+    margin: 18px 4px 0;
+    color: #607368;
+    text-align: center;
+}
+
+.register-link a {
+    color: #2c694e;
+    font-weight: 800;
+}
+
+@media (max-width: 900px) {
+    .login-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .login-side {
+        padding: 0;
+    }
+
+    .side-card {
+        max-width: none;
+    }
+}
+
+@media (max-width: 520px) {
+    .login-shell {
+        padding: 16px;
+    }
+
+    .login-card,
+    .side-card {
+        border-radius: 22px;
+        padding: 22px;
+    }
+}

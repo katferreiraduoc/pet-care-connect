@@ -1,20 +1,79 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesion | Pet Care Connect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
-<body>
-    <h1>Iniciar sesión</h1>
+<body class="login-body">
+    <main class="login-shell">
+        <section class="login-layout">
+            <aside class="login-side">
+                <a class="back-link" href="{% url 'home' %}">
+                    <span class="material-symbols-outlined">west</span>
+                    Volver al inicio
+                </a>
+                <h1>Inicia sesión y vuelve al cuidado de tus mascotas.</h1>
+                <p>Un acceso simple para retomar citas, registros y seguimiento diario.</p>
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Ingresar</button>
-    </form>
+                <div class="side-card">
+                    <div class="icon-badge">
+                        <span class="material-symbols-outlined">pets</span>
+                    </div>
+                    <h2>Todo en un solo lugar</h2>
+                    <p>Consulta información importante, organiza cuidados y mantente al día con cada mascota desde un mismo panel.</p>
+                </div>
+            </aside>
 
-    {% if form.errors %}
-        <p>Usuario o contraseña incorrectos.</p>
-    {% endif %}
+            <section class="login-card">
+                <div class="login-card-header">
+                    <span class="material-symbols-outlined">lock</span>
+                    <div>
+                        <h2>Accede a tu cuenta</h2>
+                        <p>Ingresa tus datos para continuar.</p>
+                    </div>
+                </div>
+
+                <form method="post" class="login-form" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="field-group">
+                        <label for="{{ form.username.id_for_label }}">Usuario</label>
+                        {{ form.username }}
+                        {% for error in form.username.errors %}
+                        <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="field-group">
+                        <label for="{{ form.password.id_for_label }}">Contrasena</label>
+                        {{ form.password }}
+                        {% for error in form.password.errors %}
+                        <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn-primary">Ingresar</button>
+                </form>
+
+                <p class="register-link">
+                    Aun no tienes cuenta?
+                    <a href="{% url 'registro' %}">Registrate aquí</a>
+                </p>
+            </section>
+        </section>
+    </main>
 </body>
 </html>
