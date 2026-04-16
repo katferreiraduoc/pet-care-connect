@@ -4,8 +4,9 @@ from django import forms
 from django.utils import timezone
 
 from mascotas.models import Mascota
+from tratamientos.models import Tratamiento
 
-from .models import Cita
+from .models import AtencionMedica, Cita
 
 
 class CitaForm(forms.ModelForm):
@@ -57,3 +58,133 @@ class CitaForm(forms.ModelForm):
         if commit:
             cita.save()
         return cita
+
+
+class RegistroMedicoForm(forms.ModelForm):
+    mascota = forms.ModelChoiceField(
+        queryset=Mascota.objects.none(),
+        widget=forms.Select(attrs={"class": "form-input"}),
+    )
+    peso_actual = forms.DecimalField(
+        required=False,
+        min_value=0,
+        decimal_places=2,
+        max_digits=5,
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-input",
+                "placeholder": "Ej. 12.40",
+                "step": "0.1",
+                "min": "0",
+            }
+        ),
+    )
+    vacuna_nombre = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": "form-input", "placeholder": "Ej. Rabia anual"}
+        ),
+    )
+    vacuna_proxima = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-input"}),
+    )
+    tratamiento_nombre = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": "form-input", "placeholder": "Ej. Apoquel"}
+        ),
+    )
+    medicamento = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": "form-input", "placeholder": "Medicamento indicado"}
+        ),
+    )
+    dosis = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": "form-input", "placeholder": "Ej. 1 comprimido cada 24h"}
+        ),
+    )
+    frecuencia = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": "form-input", "placeholder": "Ej. Diario por 10 dias"}
+        ),
+    )
+    fecha_fin_tratamiento = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-input"}),
+    )
+    examenes_ordenados = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-input form-textarea",
+                "rows": 3,
+                "placeholder": "Ej. Hemograma, perfil bioquimico, ecografia abdominal",
+            }
+        ),
+    )
+
+    class Meta:
+        model = AtencionMedica
+        fields = [
+            "mascota",
+            "fecha_atencion",
+            "tipo_atencion",
+            "diagnostico",
+            "tratamiento_indicado",
+            "veterinario",
+            "clinica",
+            "observaciones",
+        ]
+        widgets = {
+            "fecha_atencion": forms.DateInput(
+                attrs={"type": "date", "class": "form-input"}
+            ),
+            "tipo_atencion": forms.TextInput(
+                attrs={"class": "form-input", "placeholder": "Ej. Consulta general"}
+            ),
+            "diagnostico": forms.Textarea(
+                attrs={
+                    "class": "form-input form-textarea",
+                    "rows": 4,
+                    "placeholder": "Diagnostico o hallazgos clinicos",
+                }
+            ),
+            "tratamiento_indicado": forms.Textarea(
+                attrs={
+                    "class": "form-input form-textarea",
+                    "rows": 4,
+                    "placeholder": "Indicaciones medicas y cuidados a seguir",
+                }
+            ),
+            "veterinario": forms.TextInput(
+                attrs={"class": "form-input", "placeholder": "Nombre del veterinario"}
+            ),
+            "clinica": forms.TextInput(
+                attrs={"class": "form-input", "placeholder": "Clinica u hospital"}
+            ),
+            "observaciones": forms.Textarea(
+                attrs={
+                    "class": "form-input form-textarea",
+                    "rows": 4,
+                    "placeholder": "Notas adicionales de la atencion",
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        usuario = kwargs.pop("usuario", None)
+        selected_pet = kwargs.pop("selected_pet", None)
+        super().__init__(*args, **kwargs)
+        if usuario is not None:
+            queryset = Mascota.objects.filter(usuario=usuario).order_by("nombre")
+            self.fields["mascota"].queryset = queryset
+            if selected_pet is not None:
+                self.fields["mascota"].initial = selected_pet
+
+    def save(self, commit=True):
+        return super().save(commit=commit)

@@ -1,0 +1,418 @@
+.medical-page {
+    display: grid;
+    gap: 24px;
+    padding: 8px 0 30px;
+}
+
+.medical-kicker {
+    margin: 0 0 8px;
+    color: #6ba889;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.medical-header h1 {
+    margin: 0;
+    color: #173226;
+    font-size: clamp(2rem, 4vw, 3.3rem);
+    line-height: 1.05;
+    font-weight: 800;
+}
+
+.medical-copy {
+    max-width: 780px;
+    margin: 12px 0 0;
+    color: #62756b;
+    line-height: 1.7;
+}
+
+.pet-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.pet-pill {
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: #eef4f0;
+    color: #4e665b;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.pet-pill.active {
+    background: linear-gradient(135deg, #2c694e, #6ba889);
+    color: #fff;
+}
+
+.medical-layout {
+    display: grid;
+    grid-template-columns: minmax(290px, 0.9fr) minmax(0, 1.6fr);
+    gap: 24px;
+}
+
+.medical-sidebar,
+.medical-main {
+    display: grid;
+    gap: 24px;
+    align-content: start;
+}
+
+.info-card,
+.record-form-card,
+.timeline-card,
+.empty-state-card {
+    background: #fff;
+    border: 1px solid rgba(190, 202, 185, 0.32);
+    border-radius: 28px;
+    box-shadow: 0 20px 45px rgba(30, 50, 40, 0.06);
+}
+
+.info-card,
+.record-form-card,
+.timeline-card,
+.empty-state-card {
+    padding: 26px;
+}
+
+.warning-card {
+    background: linear-gradient(180deg, #fff8f7, #ffffff);
+}
+
+.vaccine-card {
+    background: linear-gradient(135deg, #2c694e, #6ba889);
+    color: #fff;
+}
+
+.card-head {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.card-head h2,
+.record-form-head h2,
+.timeline-head h2,
+.info-card h2 {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.tag-list {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 8px;
+    color: #5b6d63;
+}
+
+.small-label {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.highlight-date {
+    margin: 10px 0 16px;
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+
+.chip-light {
+    display: inline-flex;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.stack-list {
+    display: grid;
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.stack-item {
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: #f7f9f8;
+}
+
+.stack-item p,
+.stack-item small,
+.muted-text {
+    color: #62756b;
+}
+
+.vet-card {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.vet-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: #e7f4ed;
+    color: #2c694e;
+    font-weight: 800;
+}
+
+.record-form-head p {
+    margin: 8px 0 0;
+    color: #64776d;
+}
+
+.record-form {
+    display: grid;
+    gap: 16px;
+    margin-top: 22px;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.field-group {
+    display: grid;
+    gap: 8px;
+}
+
+.field-group label {
+    color: #64776d;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.form-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: 1px solid #d9e3dc;
+    border-radius: 16px;
+    background: #f7faf8;
+    font: inherit;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #6ba889;
+    box-shadow: 0 0 0 4px rgba(107, 168, 137, 0.12);
+}
+
+.form-textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.subsection {
+    padding: 18px;
+    border-radius: 20px;
+    background: #f6f8f7;
+}
+
+.subsection h3 {
+    margin: 0 0 14px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.submit-record {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 15px 22px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #2c694e, #6ba889);
+    color: #fff;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 18px 32px rgba(44, 105, 78, 0.16);
+}
+
+.timeline-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 26px;
+}
+
+.timeline-head span {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #eef4f0;
+    color: #2c694e;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.timeline {
+    position: relative;
+    display: grid;
+    gap: 20px;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 27px;
+    width: 2px;
+    background: rgba(190, 202, 185, 0.7);
+}
+
+.timeline-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 18px;
+}
+
+.timeline-icon {
+    position: relative;
+    z-index: 1;
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(30, 50, 40, 0.12);
+}
+
+.timeline-item.atencion .timeline-icon {
+    background: #d6894a;
+}
+
+.timeline-item.vacuna .timeline-icon {
+    background: #2c694e;
+}
+
+.timeline-item.tratamiento .timeline-icon {
+    background: #2b6485;
+}
+
+.timeline-body {
+    padding: 22px;
+    border-radius: 24px;
+    background: #f8faf9;
+    border: 1px solid rgba(190, 202, 185, 0.28);
+}
+
+.timeline-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    color: #6a7b72;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.timeline-type {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.timeline-body h3 {
+    margin: 0 0 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.timeline-body p {
+    margin: 0;
+    color: #60736a;
+    line-height: 1.7;
+}
+
+.timeline-note {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-left: 4px solid #6ba889;
+    border-radius: 0 16px 16px 0;
+    background: #eef6f1;
+    color: #395247;
+}
+
+.timeline-empty,
+.empty-state-card {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 14px;
+}
+
+.timeline-empty .material-symbols-outlined,
+.empty-state-card .material-symbols-outlined {
+    font-size: 40px;
+    color: #2c694e;
+}
+
+.messages,
+.form-errors {
+    display: grid;
+    gap: 10px;
+}
+
+.message,
+.form-errors {
+    padding: 14px 18px;
+    border-radius: 16px;
+}
+
+.message.success {
+    background: #e8f6ee;
+    color: #2c694e;
+}
+
+.message.error,
+.form-errors {
+    background: #fff1f1;
+    color: #a94444;
+}
+
+.field-error {
+    margin: 0;
+    color: #b44949;
+    font-size: 0.86rem;
+}
+
+@media (max-width: 1100px) {
+    .medical-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .field-row {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-item {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline::before {
+        display: none;
+    }
+}

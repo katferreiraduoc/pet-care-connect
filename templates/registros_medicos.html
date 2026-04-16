@@ -1,8 +1,293 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Pantalla Vacía{% endblock %}
+{% block title %}Registros Médicos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/registros_medicos.css' %}">
+{% endblock %}
 
 {% block content %}
-<!-- Pantalla en blanco -->
-<div style="height: 100vh;"></div>
+<section class="medical-page">
+    <div class="medical-header">
+        <div>
+            <p class="medical-kicker">Historial clínico</p>
+            <h1>Registros Médicos</h1>
+            <p class="medical-copy">
+                {% if selected_pet %}
+                Historial de salud, vacunas, tratamientos y observaciones para <strong>{{ selected_pet.nombre }}</strong>.
+                {% else %}
+                Registra atenciones, vacunas, tratamientos y observaciones clínicas de tus mascotas.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if mascotas_usuario %}
+    <div class="pet-filter">
+        {% for mascota in mascotas_usuario %}
+        <a href="{% url 'registros_medicos' %}?pet={{ mascota.id }}" class="pet-pill {% if selected_pet and selected_pet.id == mascota.id %}active{% endif %}">
+            {{ mascota.nombre }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <div class="medical-layout">
+        <aside class="medical-sidebar">
+            <article class="info-card warning-card">
+                <div class="card-head">
+                    <span class="material-symbols-outlined">warning</span>
+                    <h2>Alergias activas</h2>
+                </div>
+                {% if alergias_activas %}
+                <ul class="tag-list">
+                    {% for alergia in alergias_activas %}
+                    <li>{{ alergia }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="muted-text">No hay alergias registradas para esta mascota.</p>
+                {% endif %}
+            </article>
+
+            <article class="info-card vaccine-card">
+                <p class="small-label">Próxima vacuna</p>
+                {% if proxima_vacuna %}
+                <h2>{{ proxima_vacuna.nombre_vacuna }}</h2>
+                <p class="highlight-date">{{ proxima_vacuna.fecha_proxima|date:"d M Y" }}</p>
+                <span class="chip-light">Programada</span>
+                {% else %}
+                <h2>Sin próxima vacuna</h2>
+                <p class="muted-text">Todavía no hay una fecha futura registrada.</p>
+                {% endif %}
+            </article>
+
+            <article class="info-card">
+                <h2>Tratamientos activos</h2>
+                <div class="stack-list">
+                    {% for tratamiento in tratamientos_activos %}
+                    <div class="stack-item">
+                        <strong>{{ tratamiento.nombre_tratamiento }}</strong>
+                        <p>{{ tratamiento.medicamento|default:tratamiento.descripcion|default:"Sin detalle" }}</p>
+                        {% if tratamiento.frecuencia %}
+                        <small>{{ tratamiento.frecuencia }}</small>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <p class="muted-text">No hay tratamientos activos en este momento.</p>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="info-card">
+                <h2>Veterinario de cabecera</h2>
+                {% if veterinario_cabecera %}
+                <div class="vet-card">
+                    <div class="vet-avatar">
+                        {{ veterinario_cabecera.veterinario|default:"V"|slice:":1"|upper }}
+                    </div>
+                    <div>
+                        <strong>{{ veterinario_cabecera.veterinario|default:"No especificado" }}</strong>
+                        <p>{{ veterinario_cabecera.clinica|default:"Clínica no registrada" }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <p class="muted-text">Aún no hay un profesional registrado en las atenciones de esta mascota.</p>
+                {% endif %}
+            </article>
+        </aside>
+
+        <div class="medical-main">
+            <section class="record-form-card">
+                <div class="record-form-head">
+                    <h2>Registrar atención médica</h2>
+                    <p>Desde aquí puedes registrar consulta, vacuna, tratamiento, actualización de peso y órdenes de exámenes.</p>
+                </div>
+
+                <form method="post" class="record-form" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label for="{{ form.mascota.id_for_label }}">Mascota</label>
+                            {{ form.mascota }}
+                            {% for error in form.mascota.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                        </div>
+                        <div class="field-group">
+                            <label for="{{ form.fecha_atencion.id_for_label }}">Fecha</label>
+                            {{ form.fecha_atencion }}
+                            {% for error in form.fecha_atencion.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label for="{{ form.tipo_atencion.id_for_label }}">Tipo de atención</label>
+                            {{ form.tipo_atencion }}
+                            {% for error in form.tipo_atencion.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                        </div>
+                        <div class="field-group">
+                            <label for="{{ form.peso_actual.id_for_label }}">Peso actualizado</label>
+                            {{ form.peso_actual }}
+                            {% for error in form.peso_actual.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label for="{{ form.veterinario.id_for_label }}">Veterinario</label>
+                            {{ form.veterinario }}
+                            {% for error in form.veterinario.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                        </div>
+                        <div class="field-group">
+                            <label for="{{ form.clinica.id_for_label }}">Clínica</label>
+                            {{ form.clinica }}
+                            {% for error in form.clinica.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="{{ form.diagnostico.id_for_label }}">Diagnóstico</label>
+                        {{ form.diagnostico }}
+                        {% for error in form.diagnostico.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                    </div>
+
+                    <div class="field-group">
+                        <label for="{{ form.tratamiento_indicado.id_for_label }}">Indicaciones médicas</label>
+                        {{ form.tratamiento_indicado }}
+                        {% for error in form.tratamiento_indicado.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                    </div>
+
+                    <div class="field-group">
+                        <label for="{{ form.examenes_ordenados.id_for_label }}">Órdenes de exámenes</label>
+                        {{ form.examenes_ordenados }}
+                        {% for error in form.examenes_ordenados.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                    </div>
+
+                    <div class="subsection">
+                        <h3>Vacuna opcional</h3>
+                        <div class="field-row">
+                            <div class="field-group">
+                                <label for="{{ form.vacuna_nombre.id_for_label }}">Nombre de vacuna</label>
+                                {{ form.vacuna_nombre }}
+                                {% for error in form.vacuna_nombre.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                            </div>
+                            <div class="field-group">
+                                <label for="{{ form.vacuna_proxima.id_for_label }}">Próxima dosis</label>
+                                {{ form.vacuna_proxima }}
+                                {% for error in form.vacuna_proxima.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>Tratamiento opcional</h3>
+                        <div class="field-row">
+                            <div class="field-group">
+                                <label for="{{ form.tratamiento_nombre.id_for_label }}">Nombre tratamiento</label>
+                                {{ form.tratamiento_nombre }}
+                                {% for error in form.tratamiento_nombre.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                            </div>
+                            <div class="field-group">
+                                <label for="{{ form.medicamento.id_for_label }}">Medicamento</label>
+                                {{ form.medicamento }}
+                                {% for error in form.medicamento.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <div class="field-group">
+                                <label for="{{ form.dosis.id_for_label }}">Dosis</label>
+                                {{ form.dosis }}
+                                {% for error in form.dosis.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                            </div>
+                            <div class="field-group">
+                                <label for="{{ form.frecuencia.id_for_label }}">Frecuencia</label>
+                                {{ form.frecuencia }}
+                                {% for error in form.frecuencia.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label for="{{ form.fecha_fin_tratamiento.id_for_label }}">Fecha fin</label>
+                            {{ form.fecha_fin_tratamiento }}
+                            {% for error in form.fecha_fin_tratamiento.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="{{ form.observaciones.id_for_label }}">Observaciones</label>
+                        {{ form.observaciones }}
+                        {% for error in form.observaciones.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                    </div>
+
+                    <button type="submit" class="submit-record">Guardar registro</button>
+                </form>
+            </section>
+
+            <section class="timeline-card">
+                <div class="timeline-head">
+                    <h2>Cronología médica</h2>
+                    <span>{{ timeline|length }} registro{% if timeline|length != 1 %}s{% endif %}</span>
+                </div>
+
+                {% if timeline %}
+                <div class="timeline">
+                    {% for item in timeline %}
+                    <article class="timeline-item {{ item.kind }}">
+                        <div class="timeline-icon">
+                            {% if item.kind == 'vacuna' %}
+                            <span class="material-symbols-outlined">vaccines</span>
+                            {% elif item.kind == 'tratamiento' %}
+                            <span class="material-symbols-outlined">medication</span>
+                            {% else %}
+                            <span class="material-symbols-outlined">description</span>
+                            {% endif %}
+                        </div>
+                        <div class="timeline-body">
+                            <div class="timeline-meta">
+                                <span class="timeline-type">{{ item.subtitle }}</span>
+                                <span class="timeline-date">{{ item.date|date:"d M Y" }}</span>
+                            </div>
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.description|default:"Sin descripción clínica adicional." }}</p>
+                            {% if item.extra %}
+                            <div class="timeline-note">{{ item.extra }}</div>
+                            {% endif %}
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="timeline-empty">
+                    <span class="material-symbols-outlined">medical_information</span>
+                    <p>Aún no hay atenciones, vacunas ni tratamientos registrados para esta mascota.</p>
+                </div>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state-card">
+        <span class="material-symbols-outlined">pets</span>
+        <h2>Primero registra una mascota</h2>
+        <p>Necesitas al menos una mascota creada para comenzar a guardar su historial médico.</p>
+        <a href="{% url 'agregar_mascota' %}" class="submit-record">Ir a Agregar Mascota</a>
+    </div>
+    {% endif %}
+</section>
 {% endblock %}
