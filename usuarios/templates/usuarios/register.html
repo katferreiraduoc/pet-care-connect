@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear cuenta | Pet Care Connect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+</head>
+<body class="register-body">
+    <main class="register-shell">
+        <section class="register-panel">
+            <div class="register-header">
+                <a class="back-link" href="{% url 'home' %}">
+                    <span class="material-symbols-outlined">west</span>
+                    Volver al inicio
+                </a>
+                <h1>Crea tu cuenta en Pet Care Connect.</h1>
+                <p>Organiza la informacion de tus mascotas, agenda sus cuidados y empieza con un perfil claro, amable y listo para crecer contigo.</p>
+            </div>
+
+            <div class="register-grid">
+                <aside class="register-side">
+                    <div class="info-card profile-card">
+                        <div class="avatar-circle">
+                            <span class="material-symbols-outlined">person_add</span>
+                        </div>
+                        <h2>Tu perfil comienza aqui</h2>
+                        <p>Completa tus datos para crear un espacio sereno, ordenado y preparado para acompañarte en cada etapa del cuidado.</p>
+                        <div class="benefit-list">
+                            <div class="benefit-item">
+                                <span class="material-symbols-outlined">favorite</span>
+                                Bienestar y seguimiento en un solo lugar
+                            </div>
+                            <div class="benefit-item">
+                                <span class="material-symbols-outlined">event_available</span>
+                                Citas y recordatorios mejor organizados
+                            </div>
+                            <div class="benefit-item">
+                                <span class="material-symbols-outlined">pets</span>
+                                Espacio listo para cada mascota
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card tip-card">
+                        <h3>Consejo</h3>
+                        <p>Usa un correo al que tengas acceso frecuente. Así podrás mantener centralizada toda la información importante de tus mascotas.</p>
+                    </div>
+                </aside>
+
+                <section class="form-column">
+                    <form method="post" class="register-form" novalidate>
+                        {% csrf_token %}
+
+                        <div class="form-card">
+                            <div class="section-head">
+                                <span class="material-symbols-outlined">badge</span>
+                                <div>
+                                    <h2>Informacion personal</h2>
+                                    <p>Datos base para identificar tu cuenta.</p>
+                                </div>
+                            </div>
+
+                            {% if form.non_field_errors %}
+                            <div class="form-errors">
+                                {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            <div class="field-row">
+                                <div class="field-group">
+                                    <label for="{{ form.first_name.id_for_label }}">Nombre</label>
+                                    {{ form.first_name }}
+                                    {% for error in form.first_name.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                                <div class="field-group">
+                                    <label for="{{ form.last_name.id_for_label }}">Apellido</label>
+                                    {{ form.last_name }}
+                                    {% for error in form.last_name.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="field-group">
+                                <label for="{{ form.username.id_for_label }}">Nombre de usuario</label>
+                                {{ form.username }}
+                                {% for error in form.username.errors %}
+                                <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="form-card">
+                            <div class="section-head">
+                                <span class="material-symbols-outlined">mail</span>
+                                <div>
+                                    <h2>Contacto y acceso</h2>
+                                    <p>Con esto podras ingresar de forma segura.</p>
+                                </div>
+                            </div>
+
+                            <div class="field-row">
+                                <div class="field-group">
+                                    <label for="{{ form.email.id_for_label }}">Correo electronico</label>
+                                    {{ form.email }}
+                                    {% for error in form.email.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                                <div class="field-group">
+                                    <label for="{{ form.telefono.id_for_label }}">Telefono</label>
+                                    {{ form.telefono }}
+                                    {% for error in form.telefono.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="field-row">
+                                <div class="field-group">
+                                    <label for="{{ form.password1.id_for_label }}">Contraseña</label>
+                                    {{ form.password1 }}
+                                    {% for error in form.password1.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                                <div class="field-group">
+                                    <label for="{{ form.password2.id_for_label }}">Confirmar contraseña</label>
+                                    {{ form.password2 }}
+                                    {% for error in form.password2.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            {% if form.password1.help_text %}
+                            <div class="help-card">
+                                {{ form.password1.help_text|safe }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-actions">
+                            <a class="btn-secondary" href="{% url 'home' %}">Cancelar</a>
+                            <button class="btn-primary" type="submit">Crear cuenta</button>
+                        </div>
+
+                        <p class="login-link">
+                            Ya tienes cuenta?
+                            <a href="{% url 'login' %}">Inicia sesion aqui</a>
+                        </p>
+                    </form>
+                </section>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
