@@ -75,10 +75,13 @@
             Ajustes
         </a>
 
-        <a href="#">
-            <span class="material-symbols-outlined">logout</span>
-            Cerrar sesión
-        </a>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">
+                <span class="material-symbols-outlined">logout</span>
+                Cerrar sesión
+            </button>
+        </form>
     </div>
 
 </aside>
