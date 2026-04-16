@@ -31,32 +31,43 @@
 
     <nav class="menu">
 
-        <a href="{% url 'home' %}">
-            <span class="material-symbols-outlined">dashboard</span>
-            Panel de Control
-        </a>
+    <a href="{% url 'panel_control' %}" 
+        class="{% if request.resolver_match.url_name == 'panel_control' %}active{% endif %}">
+        <span class="material-symbols-outlined">dashboard</span>
+        Panel de Control
+    </a>
 
-        <a href="{% url 'agregar_mascota' %}" class="active">
-            <span class="material-symbols-outlined">pets</span>
-            Mis Mascotas
-        </a>
+    <a href="{% url 'agregar_mascota' %}" 
+        class="{% if request.resolver_match.url_name == 'agregar_mascota' %}active{% endif %}">
+        <span class="material-symbols-outlined">pets</span>
+        Agregar Mascota
+    </a>
 
-        <a href="#">
-            <span class="material-symbols-outlined">medical_services</span>
-            Registros Médicos
-        </a>
+    <a href="{% url 'mis_mascotas' %}" 
+        class="{% if request.resolver_match.url_name == 'mis_mascotas' %}active{% endif %}">
+        <span class="material-symbols-outlined">pet_supplies</span>
+        Mis Mascotas
+    </a>
 
-        <a href="#">
-            <span class="material-symbols-outlined">event</span>
-            Citas
-        </a>
+    <a href="{% url 'registros_medicos' %}" 
+        class="{% if request.resolver_match.url_name == 'registros_medicos' %}active{% endif %}">
+        <span class="material-symbols-outlined">medical_services</span>
+        Registros Médicos
+    </a>
 
-        <a href="#">
-            <span class="material-symbols-outlined">restaurant</span>
-            Dieta
-        </a>
+    <a href="{% url 'citas' %}" 
+        class="{% if request.resolver_match.url_name == 'citas' %}active{% endif %}">
+        <span class="material-symbols-outlined">event</span>
+        Citas
+    </a>
 
-    </nav>
+    <a href="{% url 'dieta' %}" 
+        class="{% if request.resolver_match.url_name == 'dieta' %}active{% endif %}">
+        <span class="material-symbols-outlined">restaurant</span>
+        Dieta
+    </a>
+
+</nav>
 
     <div class="bottom-menu">
         <a href="#">

@@ -120,6 +120,7 @@ body.app-body {
     border-radius: 10px;
     width: 80%;
     max-width: 1000vh;
+    height: 50px;
 }
 
 .search input {
@@ -209,4 +210,19 @@ button {
         grid-template-columns: 1fr;
     }
 
+}
+
+.menu-item {
+    display: flex;
+    padding: 12px;
+    border-radius: 12px;
+    color: #64748b;
+    transition: 0.3s;
+}
+
+.menu-item.activo {
+    background: #d1fae5;
+    color: #065f46;
+    font-weight: bold;
+    border-right: 4px solid #047857;
 }
