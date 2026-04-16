@@ -1,8 +1,94 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Pantalla Vacía{% endblock %}
+{% block title %}Mis Mascotas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/mis_mascotas.css' %}">
+{% endblock %}
 
 {% block content %}
-<!-- Pantalla en blanco -->
-<div style="height: 100vh;"></div>
+<section class="pets-page">
+    <div class="pets-hero">
+        <div>
+            <p class="pets-kicker">Pet Care Connect</p>
+            <h1>Mis Mascotas</h1>
+            <p class="pets-copy">Gestiona la salud y felicidad de tus compañeros con una vista clara, cálida y fácil de recorrer.</p>
+        </div>
+    </div>
+
+    <div class="pets-summary">
+        <article class="summary-card">
+            <span class="summary-label">Total registradas</span>
+            <strong>{{ total_mascotas }}</strong>
+            <p>{% if total_mascotas == 1 %}Mascota en tu panel{% else %}Mascotas en tu panel{% endif %}</p>
+        </article>
+        <article class="summary-card warm">
+            <span class="summary-label">Última registrada</span>
+            <strong>{{ ultima_mascota }}</strong>
+            <p>La incorporación más reciente a tu espacio</p>
+        </article>
+    </div>
+
+    <div class="pets-grid">
+        <a class="pet-add-card" href="{% url 'agregar_mascota' %}">
+            <div class="pet-add-icon">
+                <span class="material-symbols-outlined">add_circle</span>
+            </div>
+            <h2>Añadir Mascota</h2>
+            <p>Registra un nuevo compañero y agrégalo a tu espacio de seguimiento.</p>
+        </a>
+
+        {% for mascota in mascotas %}
+        <article class="pet-card">
+            <div class="pet-card-media">
+                <div class="pet-avatar">{{ mascota.inicial }}</div>
+                <span class="pet-badge {% if mascota.especie == 'gato' %}cat{% else %}dog{% endif %}">
+                    {{ mascota.especie_label }}
+                </span>
+            </div>
+            <div class="pet-card-body">
+                <div class="pet-head">
+                    <div>
+                        <h2>{{ mascota.nombre }}</h2>
+                        <p>{{ mascota.raza_label }}</p>
+                    </div>
+                    <span class="pet-age">{{ mascota.edad_legible }}</span>
+                </div>
+
+                <div class="pet-meta">
+                    <span>
+                        <span class="material-symbols-outlined">straighten</span>
+                        {% if mascota.peso %}{{ mascota.peso }} kg{% else %}Sin peso{% endif %}
+                    </span>
+                    <span>
+                        <span class="material-symbols-outlined">pets</span>
+                        {{ mascota.get_sexo_display }}
+                    </span>
+                </div>
+
+                <div class="pet-footer">
+                    <span class="pet-chip">
+                        <span class="material-symbols-outlined">favorite</span>
+                        Perfil activo
+                    </span>
+                    <button type="button" class="pet-action" disabled>
+                        Ver Perfil
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
+        </article>
+        {% empty %}
+        <article class="pets-empty">
+            <div class="pets-empty-icon">
+                <span class="material-symbols-outlined">pet_supplies</span>
+            </div>
+            <h2>Aún no has registrado mascotas</h2>
+            <p>Empieza creando el perfil de tu primera mascota para ver aquí su información, peso y próximos cuidados.</p>
+            <a class="pets-add-button" href="{% url 'agregar_mascota' %}">Crear primera mascota</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
 {% endblock %}
