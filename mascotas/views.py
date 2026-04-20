@@ -466,6 +466,13 @@ def panel_control(request):
         .values("mascota")
         .annotate(fecha_mas_reciente=Max("fecha_atencion"))
     }
+    ultimas_dietas_por_mascota = {}
+    for alimentacion in (
+        Alimentacion.objects.filter(mascota__usuario=request.user)
+        .select_related("mascota")
+        .order_by("mascota_id", "-fecha_registro")
+    ):
+        ultimas_dietas_por_mascota.setdefault(alimentacion.mascota_id, alimentacion)
 
     for mascota in mascotas:
         mascota.edad_legible = _edad_legible(mascota.fecha_nacimiento, hoy)
@@ -477,9 +484,7 @@ def panel_control(request):
             None,
         )
         mascota.ultima_atencion = ultimas_atenciones.get(mascota.id)
-        mascota.ultima_dieta = (
-            Alimentacion.objects.filter(mascota=mascota).order_by("-fecha_registro").first()
-        )
+        mascota.ultima_dieta = ultimas_dietas_por_mascota.get(mascota.id)
 
     alertas = []
     for vacuna in vacunas_proximas:
