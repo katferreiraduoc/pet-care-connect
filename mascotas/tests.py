@@ -1,7 +1,10 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
+from datetime import timedelta
 
 from mascotas.models import Alimentacion, Mascota
+from citas.models import Cita
 from usuarios.models import Usuario
 
 
@@ -61,3 +64,38 @@ class DietaViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Alimentacion.objects.count(), 0)
+
+
+class PanelControlViewTests(TestCase):
+    def setUp(self):
+        self.usuario = Usuario.objects.create_user(
+            username="panel",
+            password="testpass123",
+            first_name="Kathy",
+        )
+        self.client.force_login(self.usuario)
+        self.mascota = Mascota.objects.create(
+            usuario=self.usuario,
+            nombre="Luna",
+            especie="gato",
+            sexo="hembra",
+            peso="4.80",
+        )
+        Alimentacion.objects.create(
+            mascota=self.mascota,
+            tipo_alimento="Alimento seco",
+            frecuencia="2 veces al dia",
+        )
+        Cita.objects.create(
+            mascota=self.mascota,
+            fecha_cita=timezone.now() + timedelta(days=2),
+            motivo="Control general",
+        )
+
+    def test_panel_control_muestra_resumen_del_usuario(self):
+        response = self.client.get(reverse("panel_control"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Bienvenido, Kathy.")
+        self.assertContains(response, "Luna")
+        self.assertContains(response, "Control general")

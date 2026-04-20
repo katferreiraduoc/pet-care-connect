@@ -1,19 +1,40 @@
+import calendar
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Max
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
-import calendar
 
 from citas.forms import CitaForm, RegistroMedicoForm
 from citas.models import AtencionMedica, Cita
-from .forms import AlimentacionForm, MascotaForm
-from .models import Alimentacion, Mascota, Vacuna
 from tratamientos.models import Tratamiento
 
+from .forms import AlimentacionForm, MascotaForm
+from .models import Alimentacion, Mascota, Vacuna
+
+
 def home(request):
-    return render(request, 'home.html')
+    return render(request, "home.html")
+
+
+def _edad_legible(fecha_nacimiento, hoy):
+    if not fecha_nacimiento:
+        return "Edad no registrada"
+
+    edad_anios = hoy.year - fecha_nacimiento.year - (
+        (hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day)
+    )
+    return f"{edad_anios} año" if edad_anios == 1 else f"{edad_anios} años"
+
+
+def _normalizar_fecha_actividad(valor):
+    if hasattr(valor, "hour"):
+        return valor
+    return timezone.make_aware(timezone.datetime.combine(valor, timezone.datetime.min.time()))
 
 
 @login_required
@@ -24,13 +45,16 @@ def agregar_mascota(request):
             mascota = form.save(commit=False)
             mascota.usuario = request.user
             mascota.save()
-            messages.success(request, f"{mascota.nombre} fue registrada(o) correctamente.")
+            messages.success(
+                request, f"{mascota.nombre} fue registrada(o) correctamente."
+            )
             return redirect("agregar_mascota")
         messages.error(request, "Revisa los datos del formulario antes de guardar.")
     else:
         form = MascotaForm(initial={"sexo": "macho", "peso": "12.5"})
 
-    return render(request, 'mascota_add.html', {"form": form})
+    return render(request, "mascota_add.html", {"form": form})
+
 
 @login_required
 def mis_mascotas(request):
@@ -40,29 +64,18 @@ def mis_mascotas(request):
     hoy = timezone.localdate()
 
     for mascota in mascotas:
-        if mascota.fecha_nacimiento:
-            edad_anios = hoy.year - mascota.fecha_nacimiento.year - (
-                (hoy.month, hoy.day)
-                < (mascota.fecha_nacimiento.month, mascota.fecha_nacimiento.day)
-            )
-            mascota.edad_legible = (
-                f"{edad_anios} año" if edad_anios == 1 else f"{edad_anios} años"
-            )
-        else:
-            mascota.edad_legible = "Edad no registrada"
-
+        mascota.edad_legible = _edad_legible(mascota.fecha_nacimiento, hoy)
         mascota.especie_label = (mascota.especie or "Mascota").capitalize()
         mascota.raza_label = mascota.raza or "Raza no especificada"
         mascota.inicial = mascota.nombre[:1].upper() if mascota.nombre else "M"
 
-    pesos = [float(mascota.peso) for mascota in mascotas if mascota.peso is not None]
-    
     context = {
         "mascotas": mascotas,
         "total_mascotas": len(mascotas),
-        "ultima_mascota": mascotas[0].nombre if mascotas else "Aún sin mascotas",
+        "ultima_mascota": mascotas[0].nombre if mascotas else "AÃºn sin mascotas",
     }
     return render(request, "mis_mascotas.html", context)
+
 
 @login_required
 def citas(request):
@@ -77,7 +90,9 @@ def citas(request):
                 f"Cita agendada para {cita.mascota.nombre} el {timezone.localtime(cita.fecha_cita).strftime('%d/%m/%Y a las %H:%M')}.",
             )
             return redirect("citas")
-        messages.error(request, "Revisa los datos del formulario antes de confirmar la cita.")
+        messages.error(
+            request, "Revisa los datos del formulario antes de confirmar la cita."
+        )
     else:
         form = CitaForm(usuario=request.user)
 
@@ -85,7 +100,9 @@ def citas(request):
         Cita.objects.filter(
             mascota__usuario=request.user,
             fecha_cita__gte=timezone.now(),
-        ).select_related("mascota").order_by("fecha_cita")
+        )
+        .select_related("mascota")
+        .order_by("fecha_cita")
     )
 
     hoy = timezone.localdate()
@@ -138,7 +155,8 @@ def citas(request):
         "calendar_weeks": semanas,
         "calendar_title": f"{meses[hoy.month - 1]} {hoy.year}",
     }
-    return render(request, 'citas.html', context)
+    return render(request, "citas.html", context)
+
 
 @login_required
 def registros_medicos(request):
@@ -202,7 +220,7 @@ def registros_medicos(request):
 
             messages.success(
                 request,
-                f"Registro médico guardado para {mascota.nombre}.",
+                f"Registro mÃ©dico guardado para {mascota.nombre}.",
             )
             return HttpResponseRedirect(
                 f"{reverse('registros_medicos')}?pet={mascota.id}"
@@ -225,7 +243,9 @@ def registros_medicos(request):
 
     if selected_pet is not None:
         atenciones = list(
-            AtencionMedica.objects.filter(mascota=selected_pet).order_by("-fecha_atencion")
+            AtencionMedica.objects.filter(mascota=selected_pet).order_by(
+                "-fecha_atencion"
+            )
         )
         vacunas = list(
             Vacuna.objects.filter(mascota=selected_pet).order_by("-fecha_aplicacion")
@@ -316,6 +336,7 @@ def registros_medicos(request):
     }
     return render(request, "registros_medicos.html", context)
 
+
 @login_required
 def dieta(request):
     mascotas_usuario = Mascota.objects.filter(usuario=request.user).order_by("nombre")
@@ -357,10 +378,14 @@ def dieta(request):
         dieta_actual = registros_dieta[0] if registros_dieta else None
 
     resumen_frecuencia = (
-        dieta_actual.frecuencia if dieta_actual and dieta_actual.frecuencia else "Sin definir"
+        dieta_actual.frecuencia
+        if dieta_actual and dieta_actual.frecuencia
+        else "Sin definir"
     )
     resumen_horario = (
-        dieta_actual.horario if dieta_actual and dieta_actual.horario else "Sin horario registrado"
+        dieta_actual.horario
+        if dieta_actual and dieta_actual.horario
+        else "Sin horario registrado"
     )
 
     context = {
@@ -374,5 +399,210 @@ def dieta(request):
     }
     return render(request, "dieta.html", context)
 
+
+@login_required
 def panel_control(request):
-    return render(request, 'panel_control.html')
+    hoy = timezone.localdate()
+    ahora = timezone.now()
+    semana_siguiente = hoy + timedelta(days=7)
+    ventana_alertas = hoy + timedelta(days=30)
+
+    mascotas = list(
+        Mascota.objects.filter(usuario=request.user).order_by("-fecha_registro")
+    )
+    proximas_citas = list(
+        Cita.objects.filter(
+            mascota__usuario=request.user,
+            fecha_cita__gte=ahora,
+        )
+        .select_related("mascota")
+        .order_by("fecha_cita")[:5]
+    )
+    vacunas_proximas = list(
+        Vacuna.objects.filter(
+            mascota__usuario=request.user,
+            fecha_proxima__isnull=False,
+            fecha_proxima__lte=ventana_alertas,
+        )
+        .select_related("mascota")
+        .order_by("fecha_proxima")[:5]
+    )
+    tratamientos_activos = list(
+        Tratamiento.objects.filter(
+            atencion_medica__mascota__usuario=request.user,
+            estado="activo",
+        )
+        .select_related("atencion_medica", "atencion_medica__mascota")
+        .order_by("fecha_inicio")[:4]
+    )
+
+    total_mascotas = len(mascotas)
+    total_citas_mes = Cita.objects.filter(
+        mascota__usuario=request.user,
+        fecha_cita__year=hoy.year,
+        fecha_cita__month=hoy.month,
+    ).count()
+    total_vacunas = Vacuna.objects.filter(mascota__usuario=request.user).count()
+    tratamientos_activos_total = Tratamiento.objects.filter(
+        atencion_medica__mascota__usuario=request.user,
+        estado="activo",
+    ).count()
+    mascotas_con_dieta = (
+        Alimentacion.objects.filter(mascota__usuario=request.user)
+        .values("mascota")
+        .distinct()
+        .count()
+    )
+    mascotas_con_alergias = (
+        Mascota.objects.filter(usuario=request.user)
+        .exclude(alergias__isnull=True)
+        .exclude(alergias="")
+        .count()
+    )
+
+    ultimas_atenciones = {
+        registro["mascota"]: registro["fecha_mas_reciente"]
+        for registro in AtencionMedica.objects.filter(mascota__usuario=request.user)
+        .values("mascota")
+        .annotate(fecha_mas_reciente=Max("fecha_atencion"))
+    }
+
+    for mascota in mascotas:
+        mascota.edad_legible = _edad_legible(mascota.fecha_nacimiento, hoy)
+        mascota.especie_label = (mascota.especie or "Mascota").capitalize()
+        mascota.raza_label = mascota.raza or "Raza no especificada"
+        mascota.inicial = mascota.nombre[:1].upper() if mascota.nombre else "M"
+        mascota.proxima_cita = next(
+            (cita for cita in proximas_citas if cita.mascota_id == mascota.id),
+            None,
+        )
+        mascota.ultima_atencion = ultimas_atenciones.get(mascota.id)
+        mascota.ultima_dieta = (
+            Alimentacion.objects.filter(mascota=mascota).order_by("-fecha_registro").first()
+        )
+
+    alertas = []
+    for vacuna in vacunas_proximas:
+        dias = (vacuna.fecha_proxima - hoy).days
+        if dias < 0:
+            tono = "urgent"
+            detalle = f"Vencida hace {abs(dias)} dia{'s' if abs(dias) != 1 else ''}"
+        elif dias <= 7:
+            tono = "warning"
+            detalle = f"Vence en {dias} dia{'s' if dias != 1 else ''}"
+        else:
+            tono = "soft"
+            detalle = f"Programada para {vacuna.fecha_proxima.strftime('%d/%m/%Y')}"
+
+        alertas.append(
+            {
+                "tone": tono,
+                "title": f"{vacuna.mascota.nombre}: {vacuna.nombre_vacuna}",
+                "detail": detalle,
+                "cta": "Revisar vacuna",
+                "href": f"{reverse('registros_medicos')}?pet={vacuna.mascota.id}",
+                "sort_key": (0 if tono == "urgent" else 1, vacuna.fecha_proxima),
+            }
+        )
+
+    for cita in proximas_citas:
+        fecha_local = timezone.localtime(cita.fecha_cita)
+        dias = (fecha_local.date() - hoy).days
+        if dias <= 3:
+            alertas.append(
+                {
+                    "tone": "warning" if dias > 0 else "urgent",
+                    "title": f"{cita.mascota.nombre}: {cita.motivo}",
+                    "detail": fecha_local.strftime("%d/%m/%Y a las %H:%M"),
+                    "cta": "Ver cita",
+                    "href": reverse("citas"),
+                    "sort_key": (1, fecha_local.date()),
+                }
+            )
+
+    for mascota in mascotas:
+        if mascota.ultima_dieta is None:
+            alertas.append(
+                {
+                    "tone": "soft",
+                    "title": f"{mascota.nombre}: dieta pendiente",
+                    "detail": "Aun no tiene un plan de alimentacion registrado.",
+                    "cta": "Agregar dieta",
+                    "href": f"{reverse('dieta')}?pet={mascota.id}",
+                    "sort_key": (2, hoy),
+                }
+            )
+
+    alertas.sort(key=lambda item: item["sort_key"])
+
+    actividad_reciente = []
+    for alimentacion in (
+        Alimentacion.objects.filter(mascota__usuario=request.user)
+        .select_related("mascota")
+        .order_by("-fecha_registro")[:3]
+    ):
+        actividad_reciente.append(
+            {
+                "icon": "restaurant",
+                "title": f"Dieta actualizada para {alimentacion.mascota.nombre}",
+                "detail": alimentacion.tipo_alimento or "Plan de alimentacion registrado",
+                "date": timezone.localtime(alimentacion.fecha_registro),
+                "sort_date": _normalizar_fecha_actividad(
+                    timezone.localtime(alimentacion.fecha_registro)
+                ),
+            }
+        )
+
+    for atencion in (
+        AtencionMedica.objects.filter(mascota__usuario=request.user)
+        .select_related("mascota")
+        .order_by("-fecha_atencion")[:3]
+    ):
+        actividad_reciente.append(
+            {
+                "icon": "medical_services",
+                "title": f"Registro medico para {atencion.mascota.nombre}",
+                "detail": atencion.tipo_atencion,
+                "date": atencion.fecha_atencion,
+                "sort_date": _normalizar_fecha_actividad(atencion.fecha_atencion),
+            }
+        )
+
+    for vacuna in (
+        Vacuna.objects.filter(mascota__usuario=request.user)
+        .select_related("mascota")
+        .order_by("-fecha_aplicacion")[:3]
+    ):
+        actividad_reciente.append(
+            {
+                "icon": "vaccines",
+                "title": f"Vacuna registrada para {vacuna.mascota.nombre}",
+                "detail": vacuna.nombre_vacuna,
+                "date": vacuna.fecha_aplicacion,
+                "sort_date": _normalizar_fecha_actividad(vacuna.fecha_aplicacion),
+            }
+        )
+
+    actividad_reciente.sort(key=lambda item: item["sort_date"], reverse=True)
+
+    context = {
+        "mascotas": mascotas[:3],
+        "total_mascotas": total_mascotas,
+        "total_citas_mes": total_citas_mes,
+        "total_vacunas": total_vacunas,
+        "tratamientos_activos_total": tratamientos_activos_total,
+        "mascotas_con_dieta": mascotas_con_dieta,
+        "mascotas_con_alergias": mascotas_con_alergias,
+        "alertas": alertas[:4],
+        "proximas_citas": proximas_citas,
+        "tratamientos_activos": tratamientos_activos,
+        "actividad_reciente": actividad_reciente[:6],
+        "sin_dieta_total": max(total_mascotas - mascotas_con_dieta, 0),
+        "citas_semana_total": sum(
+            1
+            for cita in proximas_citas
+            if timezone.localtime(cita.fecha_cita).date() <= semana_siguiente
+        ),
+        "saludo_nombre": request.user.first_name or request.user.username,
+    }
+    return render(request, "panel_control.html", context)

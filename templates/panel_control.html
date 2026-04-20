@@ -1,8 +1,234 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Pantalla Vacía{% endblock %}
+{% block title %}Panel de Control{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/panel_control.css' %}">
+{% endblock %}
 
 {% block content %}
-<!-- Aca va el contenido-->
-<div style="height: 100vh;"></div>
+<section class="dashboard-page">
+    <div class="dashboard-hero">
+        <div>
+            <p class="dashboard-kicker">Panel principal</p>
+            <h1>Hola, {{ saludo_nombre }}.</h1>
+            <p class="dashboard-copy">
+                {% if total_mascotas %}
+                Tienes {{ total_mascotas }} mascota{% if total_mascotas != 1 %}s{% endif %}, {{ total_citas_mes }} cita{% if total_citas_mes != 1 %}s{% endif %} este mes y {{ alertas|length }} alerta{% if alertas|length != 1 %}s{% endif %} para revisar.
+                {% else %}
+                Empieza registrando tu primera mascota para ver aqui sus citas, salud y alimentacion.
+                {% endif %}
+            </p>
+        </div>
+        <a href="{% url 'agregar_mascota' %}" class="hero-action">Agregar mascota</a>
+    </div>
+
+    <div class="dashboard-metrics">
+        <article class="metric-card">
+            <span class="metric-label">Mascotas</span>
+            <strong>{{ total_mascotas }}</strong>
+            <p>Perfiles activos en tu cuenta</p>
+        </article>
+        <article class="metric-card warm">
+            <span class="metric-label">Citas esta semana</span>
+            <strong>{{ citas_semana_total }}</strong>
+            <p>Próximos controles y visitas</p>
+        </article>
+        <article class="metric-card soft">
+            <span class="metric-label">Con dieta registrada</span>
+            <strong>{{ mascotas_con_dieta }}</strong>
+            <p>{{ sin_dieta_total }} pendiente{% if sin_dieta_total != 1 %}s{% endif %} de completar</p>
+        </article>
+        <article class="metric-card fresh">
+            <span class="metric-label">Tratamientos activos</span>
+            <strong>{{ tratamientos_activos_total }}</strong>
+            <p>{{ total_vacunas }} vacunas y {{ mascotas_con_alergias }} mascota{% if mascotas_con_alergias != 1 %}s{% endif %} con alergias</p>
+        </article>
+    </div>
+
+    {% if total_mascotas %}
+    <div class="dashboard-layout">
+        <div class="dashboard-main">
+            <section class="dashboard-card pet-overview-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Resumen por mascota</h2>
+                        <p>Una vista rapida del estado general de tus companeros.</p>
+                    </div>
+                    <a href="{% url 'mis_mascotas' %}">Ver todas</a>
+                </div>
+
+                <div class="pet-overview-grid">
+                    {% for mascota in mascotas %}
+                    <article class="pet-overview-item">
+                        <div class="pet-top">
+                            <div class="pet-avatar">{{ mascota.inicial }}</div>
+                            <div>
+                                <h3>{{ mascota.nombre }}</h3>
+                                <p>{{ mascota.raza_label }}</p>
+                            </div>
+                            <span class="pet-species">{{ mascota.especie_label }}</span>
+                        </div>
+
+                        <div class="pet-stats">
+                            <div>
+                                <span>Edad</span>
+                                <strong>{{ mascota.edad_legible }}</strong>
+                            </div>
+                            <div>
+                                <span>Peso</span>
+                                <strong>{% if mascota.peso %}{{ mascota.peso }} kg{% else %}Sin registro{% endif %}</strong>
+                            </div>
+                            <div>
+                                <span>Dieta</span>
+                                <strong>{% if mascota.ultima_dieta %}{{ mascota.ultima_dieta.tipo_alimento|default:"Registrada" }}{% else %}Pendiente{% endif %}</strong>
+                            </div>
+                            <div>
+                                <span>Último control</span>
+                                <strong>{% if mascota.ultima_atencion %}{{ mascota.ultima_atencion|date:"d/m/Y" }}{% else %}Sin historial{% endif %}</strong>
+                            </div>
+                        </div>
+
+                        <div class="pet-footer-row">
+                            <span class="pet-chip">
+                                {% if mascota.proxima_cita %}
+                                Próxima cita {{ mascota.proxima_cita.fecha_cita|date:"d/m H:i" }}
+                                {% else %}
+                                Sin cita agendada
+                                {% endif %}
+                            </span>
+                            <a href="{% url 'dieta' %}?pet={{ mascota.id }}">Ver dieta</a>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="dashboard-card activity-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Actividad reciente</h2>
+                        <p>Ultimos movimientos registrados en salud y alimentacion.</p>
+                    </div>
+                </div>
+
+                <div class="activity-list">
+                    {% for item in actividad_reciente %}
+                    <article class="activity-item">
+                        <div class="activity-icon">
+                            <span class="material-symbols-outlined">{{ item.icon }}</span>
+                        </div>
+                        <div class="activity-body">
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.detail }}</p>
+                        </div>
+                        <span class="activity-date">{{ item.date|date:"d/m/Y" }}</span>
+                    </article>
+                    {% empty %}
+                    <div class="empty-block">
+                        <span class="material-symbols-outlined">timeline</span>
+                        <p>Aun no hay actividad reciente para mostrar.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+
+        <aside class="dashboard-side">
+            <section class="dashboard-card alerts-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Alertas y recordatorios</h2>
+                        <p>Lo mas importante para revisar hoy.</p>
+                    </div>
+                </div>
+
+                <div class="alerts-list">
+                    {% for alerta in alertas %}
+                    <article class="alert-item {{ alerta.tone }}">
+                        <div class="alert-dot"></div>
+                        <div class="alert-body">
+                            <h3>{{ alerta.title }}</h3>
+                            <p>{{ alerta.detail }}</p>
+                            <a href="{{ alerta.href }}">{{ alerta.cta }}</a>
+                        </div>
+                    </article>
+                    {% empty %}
+                    <div class="empty-block">
+                        <span class="material-symbols-outlined">task_alt</span>
+                        <p>Todo al dia. No hay alertas urgentes por ahora.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="dashboard-card appointments-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Próximas citas</h2>
+                        <p>Agenda veterinaria y controles programados.</p>
+                    </div>
+                    <a href="{% url 'citas' %}">Ver todas</a>
+                </div>
+
+                <div class="appointments-list">
+                    {% for cita in proximas_citas %}
+                    <article class="appointment-item">
+                        <div class="appointment-date">
+                            <strong>{{ cita.fecha_cita|date:"d" }}</strong>
+                            <span>{{ cita.fecha_cita|date:"M" }}</span>
+                        </div>
+                        <div class="appointment-body">
+                            <h3>{{ cita.mascota.nombre }}</h3>
+                            <p>{{ cita.motivo }}</p>
+                            <small>{{ cita.fecha_cita|date:"H:i" }}{% if cita.clinica %} · {{ cita.clinica }}{% endif %}</small>
+                        </div>
+                    </article>
+                    {% empty %}
+                    <div class="empty-block">
+                        <span class="material-symbols-outlined">event_busy</span>
+                        <p>No hay citas futuras agendadas.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="dashboard-card treatments-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Tratamientos activos</h2>
+                        <p>Seguimiento rapido de tratamientos en curso.</p>
+                    </div>
+                </div>
+
+                <div class="treatment-list">
+                    {% for tratamiento in tratamientos_activos %}
+                    <article class="treatment-item">
+                        <h3>{{ tratamiento.nombre_tratamiento }}</h3>
+                        <p>{{ tratamiento.atencion_medica.mascota.nombre }}</p>
+                        <small>
+                            {% if tratamiento.medicamento %}{{ tratamiento.medicamento }}{% else %}Sin medicamento especificado{% endif %}
+                            {% if tratamiento.frecuencia %} · {{ tratamiento.frecuencia }}{% endif %}
+                        </small>
+                    </article>
+                    {% empty %}
+                    <div class="empty-block">
+                        <span class="material-symbols-outlined">medication</span>
+                        <p>No hay tratamientos activos en este momento.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </aside>
+    </div>
+    {% else %}
+    <section class="dashboard-card dashboard-empty">
+        <span class="material-symbols-outlined">pets</span>
+        <h2>Tu panel cobrará vida cuando registres tu primera mascota</h2>
+        <p>Desde aqui podremos resumir citas, vacunas, dieta y actividad reciente en un solo lugar.</p>
+        <a href="{% url 'agregar_mascota' %}" class="hero-action">Crear primera mascota</a>
+    </section>
+    {% endif %}
+</section>
 {% endblock %}
