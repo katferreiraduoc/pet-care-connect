@@ -4,9 +4,6 @@ from django.shortcuts import redirect, render
 
 from .forms import CustomAuthenticationForm, RegistroUsuarioForm
 
-def home(request):
-    return render(request, 'home.html')
-
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
     next_page = reverse_lazy("mis_mascotas")
