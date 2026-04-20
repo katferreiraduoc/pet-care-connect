@@ -104,8 +104,20 @@
 
             <div class="user">
                 <div>
-                    <strong>User</strong>
-                    <p>Cuidador</p>
+                    <strong>
+                        {% if request.user.is_authenticated %}
+                            {{ request.user.first_name|default:request.user.username }}
+                        {% else %}
+                            Invitado
+                        {% endif %}
+                    </strong>
+                    <p>
+                        {% if request.user.is_authenticated and request.user.rol %}
+                            {{ request.user.rol.nombre }}
+                        {% else %}
+                            Cuidador
+                        {% endif %}
+                    </p>
                 </div>
                 <img src="https://i.pravatar.cc/40">
             </div>
