@@ -51,7 +51,7 @@
                         <strong>{{ resumen_horario }}</strong>
                     </article>
                     <article>
-                        <span>Ultimo registro</span>
+                        <span>Último registro</span>
                         <strong>{% if dieta_actual %}{{ dieta_actual.fecha_registro|date:"d/m/Y H:i" }}{% else %}Sin registros{% endif %}</strong>
                     </article>
                 </div>
@@ -84,7 +84,7 @@
                 {% empty %}
                 <div class="diet-empty">
                     <span class="material-symbols-outlined">restaurant</span>
-                    <p>Aun no hay registros de alimentación para esta mascota.</p>
+                    <p>Aún no hay registros de alimentación para esta mascota.</p>
                 </div>
                 {% endfor %}
             </div>

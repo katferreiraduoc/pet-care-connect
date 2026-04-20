@@ -72,7 +72,7 @@ def mis_mascotas(request):
     context = {
         "mascotas": mascotas,
         "total_mascotas": len(mascotas),
-        "ultima_mascota": mascotas[0].nombre if mascotas else "AÃºn sin mascotas",
+        "ultima_mascota": mascotas[0].nombre if mascotas else "Aún sin mascotas",
     }
     return render(request, "mis_mascotas.html", context)
 
@@ -220,7 +220,7 @@ def registros_medicos(request):
 
             messages.success(
                 request,
-                f"Registro mÃ©dico guardado para {mascota.nombre}.",
+                f"Registro médico guardado para {mascota.nombre}.",
             )
             return HttpResponseRedirect(
                 f"{reverse('registros_medicos')}?pet={mascota.id}"
@@ -288,7 +288,7 @@ def registros_medicos(request):
                 "kind": "atencion",
                 "date": atencion.fecha_atencion,
                 "title": atencion.tipo_atencion,
-                "subtitle": "Atencion medica",
+                "subtitle": "Atención médica",
                 "description": atencion.diagnostico or atencion.observaciones,
                 "extra": atencion.tratamiento_indicado,
             }
@@ -300,10 +300,10 @@ def registros_medicos(request):
                 "kind": "vacuna",
                 "date": vacuna.fecha_aplicacion,
                 "title": vacuna.nombre_vacuna,
-                "subtitle": "Vacunacion",
+                "subtitle": "Vacunación",
                 "description": vacuna.observaciones or "Vacuna aplicada y registrada.",
                 "extra": (
-                    f"Proxima dosis: {vacuna.fecha_proxima.strftime('%d/%m/%Y')}"
+                    f"Próxima dosis: {vacuna.fecha_proxima.strftime('%d/%m/%Y')}"
                     if vacuna.fecha_proxima
                     else ""
                 ),
@@ -364,7 +364,7 @@ def dieta(request):
             return HttpResponseRedirect(
                 f"{reverse('dieta')}?pet={alimentacion.mascota.id}"
             )
-        messages.error(request, "Revisa los datos de alimentacion antes de guardar.")
+        messages.error(request, "Revisa los datos de alimentación antes de guardar.")
     else:
         form = AlimentacionForm(usuario=request.user, selected_pet=selected_pet)
 
@@ -526,7 +526,7 @@ def panel_control(request):
                 {
                     "tone": "soft",
                     "title": f"{mascota.nombre}: dieta pendiente",
-                    "detail": "Aun no tiene un plan de alimentacion registrado.",
+                    "detail": "Aún no tiene un plan de alimentación registrado.",
                     "cta": "Agregar dieta",
                     "href": f"{reverse('dieta')}?pet={mascota.id}",
                     "sort_key": (2, hoy),
@@ -545,7 +545,7 @@ def panel_control(request):
             {
                 "icon": "restaurant",
                 "title": f"Dieta actualizada para {alimentacion.mascota.nombre}",
-                "detail": alimentacion.tipo_alimento or "Plan de alimentacion registrado",
+                "detail": alimentacion.tipo_alimento or "Plan de alimentación registrado",
                 "date": timezone.localtime(alimentacion.fecha_registro),
                 "sort_date": _normalizar_fecha_actividad(
                     timezone.localtime(alimentacion.fecha_registro)
@@ -561,7 +561,7 @@ def panel_control(request):
         actividad_reciente.append(
             {
                 "icon": "medical_services",
-                "title": f"Registro medico para {atencion.mascota.nombre}",
+                "title": f"Registro médico para {atencion.mascota.nombre}",
                 "detail": atencion.tipo_atencion,
                 "date": atencion.fecha_atencion,
                 "sort_date": _normalizar_fecha_actividad(atencion.fecha_atencion),

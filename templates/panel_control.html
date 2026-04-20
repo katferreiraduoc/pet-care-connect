@@ -17,7 +17,7 @@
                 {% if total_mascotas %}
                 Tienes {{ total_mascotas }} mascota{% if total_mascotas != 1 %}s{% endif %}, {{ total_citas_mes }} cita{% if total_citas_mes != 1 %}s{% endif %} este mes y {{ alertas|length }} alerta{% if alertas|length != 1 %}s{% endif %} para revisar.
                 {% else %}
-                Empieza registrando tu primera mascota para ver aqui sus citas, salud y alimentacion.
+                Empieza registrando tu primera mascota para ver aquí sus citas, salud y alimentación.
                 {% endif %}
             </p>
         </div>
@@ -54,7 +54,7 @@
                 <div class="section-head">
                     <div>
                         <h2>Resumen por mascota</h2>
-                        <p>Una vista rapida del estado general de tus companeros.</p>
+                        <p>Una vista rápida del estado general de tus compañeros.</p>
                     </div>
                     <a href="{% url 'mis_mascotas' %}">Ver todas</a>
                 </div>
@@ -109,7 +109,7 @@
                 <div class="section-head">
                     <div>
                         <h2>Actividad reciente</h2>
-                        <p>Ultimos movimientos registrados en salud y alimentacion.</p>
+                        <p>Últimos movimientos registrados en salud y alimentación.</p>
                     </div>
                 </div>
 
@@ -128,7 +128,7 @@
                     {% empty %}
                     <div class="empty-block">
                         <span class="material-symbols-outlined">timeline</span>
-                        <p>Aun no hay actividad reciente para mostrar.</p>
+                        <p>Aún no hay actividad reciente para mostrar.</p>
                     </div>
                     {% endfor %}
                 </div>
@@ -226,7 +226,7 @@
     <section class="dashboard-card dashboard-empty">
         <span class="material-symbols-outlined">pets</span>
         <h2>Tu panel cobrará vida cuando registres tu primera mascota</h2>
-        <p>Desde aqui podremos resumir citas, vacunas, dieta y actividad reciente en un solo lugar.</p>
+        <p>Desde aquí podremos resumir citas, vacunas, dieta y actividad reciente en un solo lugar.</p>
         <a href="{% url 'agregar_mascota' %}" class="hero-action">Crear primera mascota</a>
     </section>
     {% endif %}

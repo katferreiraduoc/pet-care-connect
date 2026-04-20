@@ -23,10 +23,10 @@ class CitaForm(forms.ModelForm):
         widgets = {
             "mascota": forms.Select(attrs={"class": "form-input"}),
             "motivo": forms.TextInput(
-                attrs={"class": "form-input", "placeholder": "Ej. Vacunacion anual"}
+                attrs={"class": "form-input", "placeholder": "Ej. Vacunación anual"}
             ),
             "clinica": forms.TextInput(
-                attrs={"class": "form-input", "placeholder": "Ej. Clinica San Francisco"}
+                attrs={"class": "form-input", "placeholder": "Ej. Clínica San Francisco"}
             ),
             "veterinario": forms.TextInput(
                 attrs={"class": "form-input", "placeholder": "Ej. Dra. Camila Soto"}
@@ -151,21 +151,21 @@ class RegistroMedicoForm(forms.ModelForm):
                 attrs={
                     "class": "form-input form-textarea",
                     "rows": 4,
-                    "placeholder": "Diagnostico o hallazgos clinicos",
+                    "placeholder": "Diagnóstico o hallazgos clínicos",
                 }
             ),
             "tratamiento_indicado": forms.Textarea(
                 attrs={
                     "class": "form-input form-textarea",
                     "rows": 4,
-                    "placeholder": "Indicaciones medicas y cuidados a seguir",
+                    "placeholder": "Indicaciones médicas y cuidados a seguir",
                 }
             ),
             "veterinario": forms.TextInput(
                 attrs={"class": "form-input", "placeholder": "Nombre del veterinario"}
             ),
             "clinica": forms.TextInput(
-                attrs={"class": "form-input", "placeholder": "Clinica u hospital"}
+                attrs={"class": "form-input", "placeholder": "Clínica u hospital"}
             ),
             "observaciones": forms.Textarea(
                 attrs={
