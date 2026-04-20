@@ -103,6 +103,47 @@
                 <p class="muted-text">Aún no hay un profesional registrado en las atenciones de esta mascota.</p>
                 {% endif %}
             </article>
+
+            <section class="timeline-card sidebar-timeline-card">
+                <div class="timeline-head">
+                    <h2>Cronología médica</h2>
+                    <span>{{ timeline|length }} registro{% if timeline|length != 1 %}s{% endif %}</span>
+                </div>
+
+                {% if timeline %}
+                <div class="timeline">
+                    {% for item in timeline %}
+                    <article class="timeline-item {{ item.kind }}">
+                        <div class="timeline-icon">
+                            {% if item.kind == 'vacuna' %}
+                            <span class="material-symbols-outlined">vaccines</span>
+                            {% elif item.kind == 'tratamiento' %}
+                            <span class="material-symbols-outlined">medication</span>
+                            {% else %}
+                            <span class="material-symbols-outlined">description</span>
+                            {% endif %}
+                        </div>
+                        <div class="timeline-body">
+                            <div class="timeline-meta">
+                                <span class="timeline-type">{{ item.subtitle }}</span>
+                                <span class="timeline-date">{{ item.date|date:"d M Y" }}</span>
+                            </div>
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.description|default:"Sin descripción clínica adicional." }}</p>
+                            {% if item.extra %}
+                            <div class="timeline-note">{{ item.extra }}</div>
+                            {% endif %}
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="timeline-empty">
+                    <span class="material-symbols-outlined">medical_information</span>
+                    <p>Aún no hay atenciones, vacunas ni tratamientos registrados para esta mascota.</p>
+                </div>
+                {% endif %}
+            </section>
         </aside>
 
         <div class="medical-main">
@@ -237,47 +278,6 @@
 
                     <button type="submit" class="submit-record">Guardar registro</button>
                 </form>
-            </section>
-
-            <section class="timeline-card">
-                <div class="timeline-head">
-                    <h2>Cronología médica</h2>
-                    <span>{{ timeline|length }} registro{% if timeline|length != 1 %}s{% endif %}</span>
-                </div>
-
-                {% if timeline %}
-                <div class="timeline">
-                    {% for item in timeline %}
-                    <article class="timeline-item {{ item.kind }}">
-                        <div class="timeline-icon">
-                            {% if item.kind == 'vacuna' %}
-                            <span class="material-symbols-outlined">vaccines</span>
-                            {% elif item.kind == 'tratamiento' %}
-                            <span class="material-symbols-outlined">medication</span>
-                            {% else %}
-                            <span class="material-symbols-outlined">description</span>
-                            {% endif %}
-                        </div>
-                        <div class="timeline-body">
-                            <div class="timeline-meta">
-                                <span class="timeline-type">{{ item.subtitle }}</span>
-                                <span class="timeline-date">{{ item.date|date:"d M Y" }}</span>
-                            </div>
-                            <h3>{{ item.title }}</h3>
-                            <p>{{ item.description|default:"Sin descripción clínica adicional." }}</p>
-                            {% if item.extra %}
-                            <div class="timeline-note">{{ item.extra }}</div>
-                            {% endif %}
-                        </div>
-                    </article>
-                    {% endfor %}
-                </div>
-                {% else %}
-                <div class="timeline-empty">
-                    <span class="material-symbols-outlined">medical_information</span>
-                    <p>Aún no hay atenciones, vacunas ni tratamientos registrados para esta mascota.</p>
-                </div>
-                {% endif %}
             </section>
         </div>
     </div>

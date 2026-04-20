@@ -265,6 +265,22 @@
     font-weight: 800;
 }
 
+.sidebar-timeline-card .timeline-head {
+    margin-bottom: 22px;
+}
+
+.sidebar-timeline-card .timeline-body {
+    padding: 18px;
+}
+
+.sidebar-timeline-card .timeline-body h3 {
+    font-size: 1.05rem;
+}
+
+.sidebar-timeline-card .timeline-note {
+    margin-top: 12px;
+}
+
 .timeline {
     position: relative;
     display: grid;
