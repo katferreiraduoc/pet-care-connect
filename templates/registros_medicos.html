@@ -40,6 +40,18 @@
         {% endfor %}
     </div>
 
+    {% if selected_pet %}
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <a href="{% url 'descargar_ficha_pdf' selected_pet.id %}" 
+           style="display: inline-flex; align-items: center; gap: 8px; background-color: #059669; color: white; font-weight: bold; padding: 10px 20px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: all 0.3s;"
+           onmouseover="this.style.backgroundColor='#047857'"
+           onmouseout="this.style.backgroundColor='#059669'">
+            <span class="material-symbols-outlined">picture_as_pdf</span>
+            Descargar Ficha de {{ selected_pet.nombre }} (PDF)
+        </a>
+    </div>
+    {% endif %}
+
     <div class="medical-layout">
         <aside class="medical-sidebar">
             <article class="info-card warning-card">

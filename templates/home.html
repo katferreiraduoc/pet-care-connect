@@ -2,39 +2,28 @@
 <!DOCTYPE html>
 <html lang="es" class="light">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-<title>Pet Care Connect</title>
-
-<!-- CSS -->
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
-
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=Manrope:wght@200..800&display=swap" rel="stylesheet"/>
-
-<!-- Icons -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-
-<!-- Tailwind -->
-<script src="https://cdn.tailwindcss.com"></script>
-
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Pet Care Connect</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=Manrope:wght@200..800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
 <body class="bg-surface text-on-surface antialiased">
 
-<!-- NAVBAR -->
 <nav class="fixed top-0 w-full z-50 glass-nav shadow-sm">
     <div class="flex justify-between items-center px-8 h-20 max-w-screen-2xl mx-auto">
         <div class="text-2xl font-bold text-emerald-900">Pet Care Connect</div>
-
         <div class="hidden md:flex items-center space-x-10">
             <a class="nav-link active" href="#">Inicio</a>
             <a class="nav-link" href="#">Servicios</a>
             <a class="nav-link" href="#">Planes</a>
             <a class="nav-link" href="#">Nosotros</a>
         </div>
-
         <div class="flex items-center space-x-4">
             <a class="btn-login" href="{% url 'login' %}">Iniciar Sesión</a>
             <a class="btn-primary" href="{% url 'registro' %}">Registrarse</a>
@@ -42,85 +31,133 @@
     </div>
 </nav>
 
-<!-- HERO -->
 <main class="pt-20">
-
-<section class="hero">
-
-    <!-- TEXTO -->
-    <div class="hero-text">
-
-        <h1>
-            Cuidado de corazón para tu compañero.
-        </h1>
-
-        <p>
-            Gestiona la salud, nutrición y bienestar de tu mascota en un entorno sereno diseñado para la tranquilidad de ambos.
-        </p>
-
-        <div class="hero-buttons">
-            <a class="btn-primary" href="{% url 'registro' %}">Comenzar Ahora</a>
-        </div>
-    </div>
-
-    <!-- IMAGEN -->
-    <div class="hero-image">
-        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7AgYrZ9ptFNoj2dyYIL7R7BUc-WPaBqzkN0ySordeZ7LGCGJUshZC7X44re7jS0SrhXzpWDauY6HE75P3yW_cqP3CZxwK7SS9Xwhn0QP2WeHnuEkL_-hDZC8-2ufA5RXezkNZJy1DZzsxIobHxXwP7f1J1dWPNqRsatLbahz-MM-42IT40INhJwrVqCOMHhr5rwkssBBJLoypUIIUZrFlGkjGrTbOd3TcqpniITlIsDRq98YP4Jd3BDRSev6UiuCCrEf6dc7R-QM" alt="Perro feliz">
-    </div>
-
-</section>
-<!-- FEATURES -->
-<section class="features">
-
-    <h2>Todo lo que tu compañero merece</h2>
-    <p class="subtitle">
-        Herramientas profesionales envueltas en una experiencia de usuario pacífica y eficiente.
-    </p>
-
-    <div class="cards">
-
-        <!-- CARD 1 -->
-        <div class="card">
-            <div class="icon-box icon-green">
-                <span class="material-symbols-outlined">clinical_notes</span>
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Cuidado de corazón para tu compañero.</h1>
+            <p>Gestiona la salud, nutrición y bienestar de tu mascota en un entorno sereno diseñado para la tranquilidad de ambos.</p>
+            <div class="hero-buttons">
+                <a class="btn-primary" href="{% url 'registro' %}">Comenzar Ahora</a>
             </div>
-            <h3>Seguimiento Médico</h3>
-            <p>
-                Un historial clínico completo. Vacunas, desparasitaciones y alergias siempre a mano y bajo control total.
-            </p>
         </div>
+        <div class="hero-image">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7AgYrZ9ptFNoj2dyYIL7R7BUc-WPaBqzkN0ySordeZ7LGCGJUshZC7X44re7jS0SrhXzpWDauY6HE75P3yW_cqP3CZxwK7SS9Xwhn0QP2WeHnuEkL_-hDZC8-2ufA5RXezkNZJy1DZzsxIobHxXwP7f1J1dWPNqRsatLbahz-MM-42IT40INhJwrVqCOMHhr5rwkssBBJLoypUIIUZrFlGkjGrTbOd3TcqpniITlIsDRq98YP4Jd3BDRSev6UiuCCrEf6dc7R-QM" alt="Perro feliz">
+        </div>
+    </section>
 
-        <!-- CARD 2 -->
-        <div class="card">
-            <div class="icon-box icon-blue">
-                <span class="material-symbols-outlined">calendar_month</span>
+    <section class="features">
+        <h2>Todo lo que tu compañero merece</h2>
+        <p class="subtitle">Herramientas profesionales envueltas en una experiencia de usuario pacífica y eficiente.</p>
+        <div class="cards">
+            <div class="card">
+                <div class="icon-box icon-green">
+                    <span class="material-symbols-outlined">clinical_notes</span>
+                </div>
+                <h3>Seguimiento Médico</h3>
+                <p>Un historial clínico completo. Vacunas, desparasitaciones y alergias siempre a mano y bajo control total.</p>
             </div>
-            <h3>Citas y Turnos</h3>
-            <p>
-                Agenda visitas al veterinario o peluquería con recordatorios inteligentes.
-            </p>
-        </div>
-
-        <!-- CARD 3 -->
-        <div class="card">
-            <div class="icon-box icon-orange">
-                <span class="material-symbols-outlined">restaurant</span>
+            <div class="card">
+                <div class="icon-box icon-blue">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                </div>
+                <h3>Citas y Turnos</h3>
+                <p>Agenda visitas al veterinario o peluquería con recordatorios inteligentes.</p>
             </div>
-            <h3>Registro de Dieta</h3>
-            <p>
-                Optimiza su nutrición. Controla ingestas y descubre la dieta perfecta.
-            </p>
+            <div class="card">
+                <div class="icon-box icon-orange">
+                    <span class="material-symbols-outlined">restaurant</span>
+                </div>
+                <h3>Registro de Dieta</h3>
+                <p>Optimiza su nutrición. Controla ingestas y descubre la dieta perfecta.</p>
+            </div>
         </div>
+    </section>
 
-    </div>
-</section>
-
+    <section class="py-16 px-8 max-w-screen-2xl mx-auto bg-white rounded-3xl shadow-sm my-10">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold text-emerald-900 mb-4">Veterinarias Cercanas</h2>
+            <p class="text-slate-600 max-w-2xl mx-auto">Encuentra atención profesional inmediata permitiendo el acceso a tu ubicación.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1 bg-slate-50 p-6 rounded-2xl overflow-y-auto" style="max-height: 500px;">
+                <h3 class="font-bold text-lg mb-4 text-emerald-800">Resultados encontrados</h3>
+                <div id="vets-list" class="space-y-4">
+                    <p class="text-sm text-slate-500 text-center py-10">Buscando veterinarias en tu zona...</p>
+                </div>
+            </div>
+            <div class="lg:col-span-2 relative">
+                <div id="map" class="rounded-2xl shadow-inner border-4 border-white" style="height: 500px; width: 100%; min-height: 500px; z-index: 1;"></div>
+                <button onclick="obtenerUbicacion()" class="absolute bottom-4 right-4 z-[1000] bg-emerald-600 text-white p-3 rounded-full shadow-lg hover:bg-emerald-700 transition">
+                    <span class="material-symbols-outlined">my_location</span>
+                </button>
+            </div>
+        </div>
+    </section>
 </main>
 
-<!-- FOOTER -->
 <footer class="footer">
     <p>© 2026 Pet Care Connect</p>
 </footer>
+
+<script>
+    var map = L.map('map').setView([0, 0], 2);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    function obtenerUbicacion() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                
+                map.setView([lat, lon], 14);
+                setTimeout(() => { map.invalidateSize(); }, 200);
+
+                L.marker([lat, lon]).addTo(map).bindPopup("<b>Tú estás aquí</b>").openPopup();
+                
+                cargarVetsReales();
+            }, function(error) {
+                console.error(error);
+            });
+        }
+    }
+
+    function cargarVetsReales() {
+        fetch('/api/veterinarias/')
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('vets-list');
+                list.innerHTML = ''; 
+
+                if (data.length === 0) {
+                    list.innerHTML = '<p class="text-center py-10 text-slate-500">No hay veterinarias registradas aún.</p>';
+                    return;
+                }
+
+                data.forEach(vet => {
+                    L.marker([vet.lat, vet.lng]).addTo(map)
+                        .bindPopup(`<b>${vet.nombre}</b><br>${vet.direccion}`);
+
+                    list.innerHTML += `
+                        <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-emerald-500 hover:shadow-md transition cursor-pointer" 
+                             onclick="map.setView([${vet.lat}, ${vet.lng}], 16)">
+                            <h4 class="font-bold text-emerald-900">${vet.nombre}</h4>
+                            <p class="text-xs text-slate-500 mb-1">${vet.direccion}</p>
+                            <div class="flex items-center text-xs text-emerald-700 font-semibold">
+                                <span class="material-symbols-outlined text-sm mr-1">location_on</span> Ver en mapa
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+    }
+
+    window.onload = function() {
+        obtenerUbicacion();
+    };
+</script>
 
 </body>
 </html>
