@@ -1,0 +1,327 @@
+.diet-page {
+    display: grid;
+    gap: 24px;
+    padding: 8px 0 30px;
+}
+
+.diet-header h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.1rem);
+    line-height: 1.05;
+    color: #173226;
+    font-weight: 800;
+}
+
+.diet-kicker {
+    margin: 0 0 8px;
+    color: #c9752a;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.diet-copy {
+    max-width: 740px;
+    margin: 12px 0 0;
+    color: #66756a;
+    line-height: 1.7;
+}
+
+.pet-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.pet-pill {
+    padding: 11px 16px;
+    border-radius: 999px;
+    background: #fff5e8;
+    color: #915210;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.pet-pill.active {
+    background: linear-gradient(135deg, #d97b28, #f0b35c);
+    color: #fff;
+}
+
+.diet-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.95fr);
+    gap: 24px;
+}
+
+.diet-main-card,
+.diet-side-card,
+.diet-empty-state {
+    background: #fff;
+    border: 1px solid rgba(224, 193, 150, 0.42);
+    border-radius: 28px;
+    box-shadow: 0 20px 45px rgba(74, 52, 22, 0.08);
+}
+
+.diet-main-card,
+.diet-side-card {
+    padding: 26px;
+}
+
+.diet-summary {
+    display: grid;
+    gap: 20px;
+    padding: 22px;
+    border-radius: 24px;
+    background:
+        radial-gradient(circle at top right, rgba(255, 216, 161, 0.42), transparent 42%),
+        linear-gradient(135deg, #fff7ed, #fffdf8);
+    border: 1px solid rgba(222, 192, 145, 0.45);
+}
+
+.summary-label {
+    margin: 0 0 8px;
+    color: #a76822;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.diet-summary h2,
+.diet-side-card h2,
+.history-head h2 {
+    margin: 0;
+    font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.summary-grid article {
+    display: grid;
+    gap: 8px;
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.85);
+}
+
+.summary-grid span {
+    color: #93663b;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.summary-grid strong {
+    color: #2f271e;
+    line-height: 1.5;
+}
+
+.history-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: center;
+    margin: 24px 0 18px;
+}
+
+.history-head span {
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: #fff5e8;
+    color: #9a5c1c;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.diet-history,
+.diet-form,
+.messages,
+.form-errors {
+    display: grid;
+    gap: 16px;
+}
+
+.diet-item {
+    padding: 18px;
+    border-radius: 22px;
+    background: #fffaf4;
+    border: 1px solid rgba(226, 198, 156, 0.44);
+}
+
+.diet-item-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: start;
+}
+
+.diet-item h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.diet-item-top p {
+    margin: 6px 0 0;
+    color: #7f6a54;
+}
+
+.diet-item-top span {
+    color: #8d704d;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.diet-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.diet-tags span {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #fff;
+    color: #7c5e39;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.diet-note {
+    margin: 14px 0 0;
+    color: #5f5448;
+    line-height: 1.6;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.field-group {
+    display: grid;
+    gap: 8px;
+}
+
+.field-group label {
+    color: #7f694e;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.form-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: 1px solid #ead7bf;
+    border-radius: 16px;
+    background: #fffdf9;
+    font: inherit;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #d97b28;
+    box-shadow: 0 0 0 4px rgba(217, 123, 40, 0.12);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.diet-submit {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 15px 22px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #c7691a, #edab52);
+    color: #fff;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 18px 34px rgba(199, 105, 26, 0.22);
+}
+
+.message,
+.form-errors {
+    padding: 14px 18px;
+    border-radius: 16px;
+}
+
+.message.success {
+    background: #fff4e8;
+    color: #8f531a;
+}
+
+.message.error,
+.form-errors {
+    background: #fff1f1;
+    color: #a94444;
+}
+
+.field-error {
+    margin: 0;
+    color: #b44949;
+    font-size: 0.86rem;
+}
+
+.diet-empty,
+.diet-empty-state {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 12px;
+    color: #6f614f;
+}
+
+.diet-empty {
+    padding: 26px 12px;
+    border-radius: 22px;
+    background: #fffaf4;
+    border: 1px dashed rgba(214, 171, 117, 0.58);
+}
+
+.diet-empty-state {
+    padding: 42px 28px;
+}
+
+.diet-empty .material-symbols-outlined,
+.diet-empty-state .material-symbols-outlined {
+    font-size: 40px;
+    color: #c7691a;
+}
+
+@media (max-width: 1100px) {
+    .diet-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .summary-grid,
+    .field-row {
+        grid-template-columns: 1fr;
+    }
+
+    .diet-item-top,
+    .history-head {
+        flex-direction: column;
+    }
+
+    .diet-item-top span {
+        white-space: normal;
+    }
+}

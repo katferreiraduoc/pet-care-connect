@@ -1,8 +1,164 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Pantalla Vacía{% endblock %}
+{% block title %}Dieta{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dieta.css' %}">
+{% endblock %}
 
 {% block content %}
-<!-- Pantalla en blanco -->
-<div style="height: 100vh;"></div>
+<section class="diet-page">
+    <div class="diet-header">
+        <div>
+            <p class="diet-kicker">Nutricion diaria</p>
+            <h1>Dieta y alimentación</h1>
+            <p class="diet-copy">Registra el plan alimenticio de cada mascota, deja horarios claros y guarda observaciones útiles para su rutina.</p>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if mascotas_usuario %}
+    <div class="pet-filter">
+        {% for mascota in mascotas_usuario %}
+        <a href="{% url 'dieta' %}?pet={{ mascota.id }}" class="pet-pill {% if selected_pet and selected_pet.id == mascota.id %}active{% endif %}">
+            {{ mascota.nombre }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <div class="diet-layout">
+        <section class="diet-main-card">
+            <div class="diet-summary">
+                <div>
+                    <p class="summary-label">Mascota seleccionada</p>
+                    <h2>{% if selected_pet %}{{ selected_pet.nombre }}{% else %}Sin mascota{% endif %}</h2>
+                </div>
+                <div class="summary-grid">
+                    <article>
+                        <span>Frecuencia</span>
+                        <strong>{{ resumen_frecuencia }}</strong>
+                    </article>
+                    <article>
+                        <span>Horario</span>
+                        <strong>{{ resumen_horario }}</strong>
+                    </article>
+                    <article>
+                        <span>Ultimo registro</span>
+                        <strong>{% if dieta_actual %}{{ dieta_actual.fecha_registro|date:"d/m/Y H:i" }}{% else %}Sin registros{% endif %}</strong>
+                    </article>
+                </div>
+            </div>
+
+            <div class="history-head">
+                <h2>Historial de alimentación</h2>
+                <span>{{ registros_dieta|length }} registro{% if registros_dieta|length != 1 %}s{% endif %}</span>
+            </div>
+
+            <div class="diet-history">
+                {% for registro in registros_dieta %}
+                <article class="diet-item">
+                    <div class="diet-item-top">
+                        <div>
+                            <h3>{{ registro.tipo_alimento|default:"Alimentación registrada" }}</h3>
+                            <p>{{ registro.marca|default:"Marca no especificada" }}</p>
+                        </div>
+                        <span>{{ registro.fecha_registro|date:"d M Y H:i" }}</span>
+                    </div>
+                    <div class="diet-tags">
+                        <span>{{ registro.cantidad|default:"Cantidad no indicada" }}</span>
+                        <span>{{ registro.frecuencia|default:"Frecuencia no indicada" }}</span>
+                        <span>{{ registro.horario|default:"Horario no indicado" }}</span>
+                    </div>
+                    {% if registro.observaciones %}
+                    <p class="diet-note">{{ registro.observaciones }}</p>
+                    {% endif %}
+                </article>
+                {% empty %}
+                <div class="diet-empty">
+                    <span class="material-symbols-outlined">restaurant</span>
+                    <p>Aun no hay registros de alimentación para esta mascota.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <aside class="diet-side-card">
+            <h2>Agregar plan de alimentación</h2>
+
+            <form method="post" class="diet-form" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="field-group">
+                    <label for="{{ form.mascota.id_for_label }}">Mascota</label>
+                    {{ form.mascota }}
+                    {% for error in form.mascota.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+
+                <div class="field-group">
+                    <label for="{{ form.tipo_alimento.id_for_label }}">Tipo de alimento</label>
+                    {{ form.tipo_alimento }}
+                    {% for error in form.tipo_alimento.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+
+                <div class="field-group">
+                    <label for="{{ form.marca.id_for_label }}">Marca</label>
+                    {{ form.marca }}
+                    {% for error in form.marca.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label for="{{ form.cantidad.id_for_label }}">Cantidad</label>
+                        {{ form.cantidad }}
+                        {% for error in form.cantidad.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                    </div>
+
+                    <div class="field-group">
+                        <label for="{{ form.frecuencia.id_for_label }}">Frecuencia</label>
+                        {{ form.frecuencia }}
+                        {% for error in form.frecuencia.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label for="{{ form.horario.id_for_label }}">Horario</label>
+                    {{ form.horario }}
+                    {% for error in form.horario.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+
+                <div class="field-group">
+                    <label for="{{ form.observaciones.id_for_label }}">Observaciones</label>
+                    {{ form.observaciones }}
+                    {% for error in form.observaciones.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+
+                <button type="submit" class="diet-submit">Guardar dieta</button>
+            </form>
+        </aside>
+    </div>
+    {% else %}
+    <div class="diet-empty-state">
+        <span class="material-symbols-outlined">pets</span>
+        <h2>Primero registra una mascota</h2>
+        <p>Necesitas al menos una mascota creada para comenzar a guardar su alimentación.</p>
+        <a href="{% url 'agregar_mascota' %}" class="diet-submit">Ir a Agregar Mascota</a>
+    </div>
+    {% endif %}
+</section>
 {% endblock %}

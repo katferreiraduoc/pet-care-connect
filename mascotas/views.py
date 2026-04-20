@@ -8,8 +8,8 @@ import calendar
 
 from citas.forms import CitaForm, RegistroMedicoForm
 from citas.models import AtencionMedica, Cita
-from .forms import MascotaForm
-from .models import Mascota, Vacuna
+from .forms import AlimentacionForm, MascotaForm
+from .models import Alimentacion, Mascota, Vacuna
 from tratamientos.models import Tratamiento
 
 def home(request):
@@ -316,8 +316,63 @@ def registros_medicos(request):
     }
     return render(request, "registros_medicos.html", context)
 
+@login_required
 def dieta(request):
-    return render(request, 'dieta.html')
+    mascotas_usuario = Mascota.objects.filter(usuario=request.user).order_by("nombre")
+    selected_pet = None
+    selected_pet_id = request.GET.get("pet")
+
+    if mascotas_usuario.exists():
+        if selected_pet_id:
+            selected_pet = mascotas_usuario.filter(id=selected_pet_id).first()
+        if selected_pet is None:
+            selected_pet = mascotas_usuario.first()
+
+    if request.method == "POST":
+        form = AlimentacionForm(
+            request.POST,
+            usuario=request.user,
+            selected_pet=selected_pet,
+        )
+        if form.is_valid():
+            alimentacion = form.save()
+            messages.success(
+                request,
+                f"Dieta registrada para {alimentacion.mascota.nombre}.",
+            )
+            return HttpResponseRedirect(
+                f"{reverse('dieta')}?pet={alimentacion.mascota.id}"
+            )
+        messages.error(request, "Revisa los datos de alimentacion antes de guardar.")
+    else:
+        form = AlimentacionForm(usuario=request.user, selected_pet=selected_pet)
+
+    registros_dieta = []
+    dieta_actual = None
+
+    if selected_pet is not None:
+        registros_dieta = list(
+            Alimentacion.objects.filter(mascota=selected_pet).order_by("-fecha_registro")
+        )
+        dieta_actual = registros_dieta[0] if registros_dieta else None
+
+    resumen_frecuencia = (
+        dieta_actual.frecuencia if dieta_actual and dieta_actual.frecuencia else "Sin definir"
+    )
+    resumen_horario = (
+        dieta_actual.horario if dieta_actual and dieta_actual.horario else "Sin horario registrado"
+    )
+
+    context = {
+        "form": form,
+        "mascotas_usuario": mascotas_usuario,
+        "selected_pet": selected_pet,
+        "registros_dieta": registros_dieta,
+        "dieta_actual": dieta_actual,
+        "resumen_frecuencia": resumen_frecuencia,
+        "resumen_horario": resumen_horario,
+    }
+    return render(request, "dieta.html", context)
 
 def panel_control(request):
     return render(request, 'panel_control.html')
