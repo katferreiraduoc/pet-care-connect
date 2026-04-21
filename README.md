@@ -1,30 +1,55 @@
-# 🐾 Pet Care Connect
+# Pet Care Connect
 
-Proyecto web desarrollado con Django para la gestión de mascotas, citas veterinarias, tratamientos y alimentación.
-
----
+Proyecto web desarrollado con Django para la gestión de mascotas, registros médicos, citas, tratamientos, alimentación y búsqueda de veterinarias cercanas.
 
 ## Tecnologías utilizadas
 
-* Python 3.x
-* Django
-* Git & GitHub
-* MySQL
+- Python 3
+- Django 6
+- MySQL
+- HTML, CSS y JavaScript
+- Leaflet
+- xhtml2pdf
 
----
+## Funcionalidades principales
 
-## Clonar el repositorio
+- Registro e inicio de sesión con usuario personalizado
+- Gestión de mascotas
+- Registro de atenciones médicas, vacunas y tratamientos
+- Agenda de citas veterinarias
+- Registro de dieta y alimentación
+- Descarga de ficha médica en PDF
+- Vista de veterinarias cercanas en mapa
+
+## Estructura del proyecto
+
+El proyecto está organizado en las siguientes apps:
+
+- `usuarios`: `Rol`, `Usuario`, `Veterinaria`
+- `mascotas`: `Mascota`, `Alimentacion`, `Vacuna`, `Recordatorio`
+- `citas`: `Cita`, `AtencionMedica`
+- `tratamientos`: `Tratamiento`
+
+Los roles iniciales (`Admin`, `Veterinario`, `Cliente`) se cargan automáticamente mediante migraciones.
+
+## Requisitos
+
+- Python 3.x
+- MySQL instalado y en ejecución
+- Un entorno virtual recomendado
+
+## Instalación
+
+### 1. Clonar el repositorio
 
 ```bash
 git clone https://github.com/TU-USUARIO/pet-care-connect.git
 cd pet-care-connect
 ```
 
----
+### 2. Cambiar a la rama de trabajo
 
-## Trabajar en la rama develop (IMPORTANTE)
-
-Este proyecto utiliza la rama **develop** como rama principal de trabajo.
+Este proyecto utiliza `develop` como rama principal de trabajo.
 
 ```bash
 git fetch origin
@@ -37,41 +62,33 @@ Si no tienes la rama local:
 git checkout -b develop origin/develop
 ```
 
----
-
-## Crear entorno virtual
+### 3. Crear y activar entorno virtual
 
 ```bash
 python -m venv venv
 ```
 
-### Activar entorno virtual
-
-**Windows (PowerShell):**
+Windows PowerShell:
 
 ```bash
 venv\Scripts\Activate.ps1
 ```
 
-**Windows (CMD):**
+Windows CMD:
 
 ```bash
 venv\Scripts\activate.bat
 ```
 
----
-
-## 📦 Instalar dependencias
+### 4. Instalar dependencias
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
+## Configuración de entorno
 
-## 🔐 Variables de entorno
-
-Crear un archivo `.env` en la raíz del proyecto con el siguiente contenido:
+Crea un archivo `.env` en la raíz del proyecto:
 
 ```env
 DB_NAME=pet_care_connect
@@ -81,87 +98,36 @@ DB_PASSWORD=tu_password
 
 Este archivo es local y no debe subirse al repositorio.
 
-Asegúrate de que `.env` esté incluido en `.gitignore`.
+## Configuración de base de datos
 
----
+### 1. Crear base de datos y usuario en MySQL
 
-## 🗄️ Configuración de base de datos (MySQL)
-
-### 1. Crear usuario de base de datos
-
-Ejecutar en MySQL:
+Ejecuta en MySQL:
 
 ```sql
+CREATE DATABASE pet_care_connect CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'petcare_app'@'localhost' IDENTIFIED BY 'TuPasswordSegura123!';
 GRANT ALL PRIVILEGES ON pet_care_connect.* TO 'petcare_app'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-El usuario y la contraseña deben coincidir con los valores configurados en el archivo `.env`.
+El usuario y la contraseña deben coincidir con los valores definidos en `.env`.
 
-### 2. Configurar conexión en Django
+### 2. Aplicar migraciones
 
-Editar el archivo:
-
-```text
-petcare/settings.py
-```
-
-Y usar la configuración de base de datos con variables de entorno:
-
-```python
-from decouple import config
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        }
-    }
-}
-```
-
-### 3. Crear estructura de base de datos con Django
-
-Una vez configurada la conexión a MySQL y creado el archivo `.env`, ejecutar:
+Una vez configurado MySQL y creado el archivo `.env`, ejecuta:
 
 ```bash
 python manage.py migrate
 ```
 
-Si todo está correcto, Django aplicará las migraciones y creará la estructura necesaria en la base de datos.
+Este paso crea toda la estructura de tablas del proyecto.
 
----
+### 3. Crear superusuario opcional
 
-## 🧩 Modelo de datos actual
-
-El proyecto está organizado en las siguientes apps:
-
-* **usuarios**: Rol, Usuario
-* **mascotas**: Mascota, Alimentacion, Vacuna, Recordatorio
-* **citas**: Cita, AtencionMedica
-* **tratamientos**: Tratamiento
-
-Los roles iniciales (`Admin`, `Veterinario`, `Cliente`) se cargan automáticamente mediante migraciones.
-
----
-
-## 📄 Documentación de base de datos
-
-En la carpeta `docs/db/` se conservan archivos referenciales del diseño original:
-
-* `create-bd.sql`
-* `db-diagram.png`
-
-Estos archivos sirven como apoyo documental del MER, pero la estructura actual del proyecto se gestiona mediante modelos y migraciones de Django.
-
----
+```bash
+python manage.py createsuperuser
+```
 
 ## Levantar el servidor
 
@@ -169,18 +135,38 @@ Estos archivos sirven como apoyo documental del MER, pero la estructura actual d
 python manage.py runserver
 ```
 
-Abrir en navegador:
+Luego abre:
 
-👉 http://127.0.0.1:8000/
+```text
+http://127.0.0.1:8000/
+```
 
----
+## Rutas y módulos destacados
+
+- `/` : portada pública
+- `/panel-control/` : panel principal del usuario autenticado
+- `/mis_mascotas/` : listado de mascotas del usuario
+- `/registros-medicos/` : historial médico
+- `/mascota/<id>/pdf/` : descarga de ficha médica en PDF
+- `/dieta/` : seguimiento de alimentación
+- `/veterinarias-cercanas/` : mapa de veterinarias para usuarios logueados
+- `/api/veterinarias/` : endpoint JSON con veterinarias registradas
+
+## Documentación de base de datos
+
+En `docs/db/` se conservan archivos referenciales del diseño original:
+
+- `create-bd.sql`
+- `db-diagram.png`
+
+Sirven como apoyo documental, pero la estructura vigente del proyecto se gestiona mediante modelos y migraciones de Django.
 
 ## Buenas prácticas del equipo
 
-* ❗ **NO trabajar en main**
-* ✅ Trabajar siempre en `develop`
-* 🔄 Crear ramas desde `develop` para nuevas funcionalidades
-* 💾 Hacer commits frecuentes y descriptivos
+- No trabajar en `main`
+- Trabajar siempre en `develop`
+- Crear ramas desde `develop` para nuevas funcionalidades
+- Hacer commits frecuentes y descriptivos
 
 Ejemplo:
 
@@ -188,46 +174,15 @@ Ejemplo:
 git checkout -b feature/registro-usuario
 ```
 
----
+## Notas
 
-## 📁 Estructura del proyecto
+- Activa siempre el entorno virtual antes de trabajar.
+- No subas `venv/` ni `.env` al repositorio.
+- Si agregas nuevas librerías, actualiza `requirements.txt`.
+- Si aparece un error como `Table '...usuarios_veterinaria' doesn't exist`, probablemente faltan migraciones por aplicar.
 
-```text
-pet-care-connect/
-│
-├── docs/
-│   └── db/
-│       ├── create-bd.sql
-│       └── db-diagram.png
-├── usuarios/
-├── mascotas/
-├── citas/
-├── tratamientos/
-├── petcare/
-├── manage.py
-├── requirements.txt
-├── .gitignore
-└── README.md
-```
+## Equipo
 
----
-
-## 💡 Notas
-
-* Asegúrate de tener Python y MySQL instalados
-* Activar siempre el entorno virtual antes de trabajar
-* No subir la carpeta `venv/` al repositorio
-* No subir el archivo `.env` al repositorio
-* Si agregas nuevas librerías, actualizar:
-
-```bash
-pip freeze > requirements.txt
-```
-
----
-
-## 👩‍💻 Equipo
-
-* Katherine Ferreira
-* Gerko Berrios
-* Julian Soberon
+- Katherine Ferreira
+- Gerko Berrios
+- Julian Soberon
