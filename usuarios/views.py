@@ -6,9 +6,6 @@ from django.http import JsonResponse
 from .forms import CustomAuthenticationForm, RegistroUsuarioForm
 from .models import Veterinaria
 
-def home(request):
-    return render(request, 'home.html')
-
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
     next_page = reverse_lazy("mis_mascotas")

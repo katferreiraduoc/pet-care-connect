@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Mascota
+from .models import Alimentacion, Mascota
 
 
 class MascotaForm(forms.ModelForm):
@@ -56,3 +56,60 @@ class MascotaForm(forms.ModelForm):
         self.fields["peso"].initial = (
             self.initial.get("peso") or self.data.get("peso") or "12.5"
         )
+
+
+class AlimentacionForm(forms.ModelForm):
+    mascota = forms.ModelChoiceField(
+        queryset=Mascota.objects.none(),
+        widget=forms.Select(attrs={"class": "form-input"}),
+        empty_label="Selecciona una mascota",
+    )
+
+    class Meta:
+        model = Alimentacion
+        fields = [
+            "mascota",
+            "tipo_alimento",
+            "marca",
+            "cantidad",
+            "frecuencia",
+            "horario",
+            "observaciones",
+        ]
+        widgets = {
+            "tipo_alimento": forms.TextInput(
+                attrs={"class": "form-input", "placeholder": "Ej. Alimento seco"}
+            ),
+            "marca": forms.TextInput(
+                attrs={"class": "form-input", "placeholder": "Ej. Royal Canin"}
+            ),
+            "cantidad": forms.TextInput(
+                attrs={"class": "form-input", "placeholder": "Ej. 120 g por porcion"}
+            ),
+            "frecuencia": forms.TextInput(
+                attrs={"class": "form-input", "placeholder": "Ej. 2 veces al dia"}
+            ),
+            "horario": forms.TextInput(
+                attrs={"class": "form-input", "placeholder": "Ej. 08:00 y 20:00"}
+            ),
+            "observaciones": forms.Textarea(
+                attrs={
+                    "class": "form-input form-textarea",
+                    "placeholder": "Alergias, premios permitidos, agua, indicaciones especiales...",
+                    "rows": 4,
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        usuario = kwargs.pop("usuario", None)
+        selected_pet = kwargs.pop("selected_pet", None)
+        super().__init__(*args, **kwargs)
+
+        queryset = Mascota.objects.none()
+        if usuario is not None:
+            queryset = Mascota.objects.filter(usuario=usuario).order_by("nombre")
+
+        self.fields["mascota"].queryset = queryset
+        if selected_pet is not None:
+            self.fields["mascota"].initial = selected_pet
