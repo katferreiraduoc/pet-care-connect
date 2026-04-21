@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Veterinarias Cercanas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+    .vets-page {
+        display: grid;
+        gap: 24px;
+    }
+
+    .vets-header {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .vets-header h1 {
+        margin: 0;
+        font-size: 2rem;
+        color: #0f5b52;
+    }
+
+    .vets-header p {
+        margin: 0;
+        color: #64748b;
+        max-width: 720px;
+    }
+
+    .vets-layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+        gap: 24px;
+    }
+
+    .vets-panel,
+    .map-card {
+        background: #ffffff;
+        border-radius: 28px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+    }
+
+    .vets-panel {
+        padding: 24px;
+        max-height: 560px;
+        overflow-y: auto;
+    }
+
+    .vets-panel h2 {
+        margin: 0 0 16px;
+        color: #0f5b52;
+        font-size: 1.1rem;
+    }
+
+    .map-card {
+        position: relative;
+        padding: 12px;
+    }
+
+    #map {
+        height: 536px;
+        width: 100%;
+        border-radius: 22px;
+    }
+
+    .locate-button {
+        position: absolute;
+        right: 28px;
+        bottom: 28px;
+        z-index: 1000;
+        border: 0;
+        border-radius: 999px;
+        background: #059669;
+        color: #fff;
+        width: 56px;
+        height: 56px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 14px 30px rgba(5, 150, 105, 0.3);
+    }
+
+    .vets-list-empty {
+        color: #64748b;
+        text-align: center;
+        padding: 48px 12px;
+    }
+
+    .vet-item {
+        background: #fff;
+        border-left: 4px solid #10b981;
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .vet-item + .vet-item {
+        margin-top: 14px;
+    }
+
+    .vet-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.1);
+    }
+
+    .vet-item h3 {
+        margin: 0 0 6px;
+        color: #0f172a;
+        font-size: 1rem;
+    }
+
+    .vet-item p {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.92rem;
+    }
+
+    .vet-item small {
+        display: inline-flex;
+        align-items: center;
+        margin-top: 10px;
+        color: #047857;
+        font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+        .vets-layout {
+            grid-template-columns: 1fr;
+        }
+
+        #map {
+            height: 420px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="vets-page">
+    <div class="vets-header">
+        <h1>Veterinarias Cercanas</h1>
+        <p>Encuentra atención veterinaria disponible alrededor de tu ubicación y revisa rápidamente sus direcciones en el mapa.</p>
+    </div>
+
+    <div class="vets-layout">
+        <aside class="vets-panel">
+            <h2>Resultados encontrados</h2>
+            <div id="vets-list">
+                <p class="vets-list-empty">Buscando veterinarias en tu zona...</p>
+            </div>
+        </aside>
+
+        <div class="map-card">
+            <div id="map"></div>
+            <button type="button" class="locate-button" onclick="obtenerUbicacion()" aria-label="Actualizar ubicación">
+                <span class="material-symbols-outlined">my_location</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const map = L.map('map').setView([0, 0], 2);
+    const markersLayer = L.layerGroup().addTo(map);
+    const list = document.getElementById('vets-list');
+
+    const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd',
+        maxZoom: 20,
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+        crossOrigin: true
+    });
+
+    baseLayer.on('tileerror', function () {
+        list.innerHTML = '<p class="vets-list-empty">No se pudo cargar el mapa base en este navegador. Intenta nuevamente en unos segundos.</p>';
+    });
+
+    baseLayer.addTo(map);
+
+    function obtenerUbicacion() {
+        if (!navigator.geolocation) {
+            list.innerHTML = '<p class="vets-list-empty">Tu navegador no soporta geolocalización.</p>';
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(function (position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            map.setView([lat, lon], 14);
+            setTimeout(() => { map.invalidateSize(); }, 200);
+
+            markersLayer.clearLayers();
+            L.marker([lat, lon]).addTo(markersLayer).bindPopup('<b>Tú estás aquí</b>').openPopup();
+
+            cargarVetsReales();
+        }, function (error) {
+            console.error(error);
+            list.innerHTML = '<p class="vets-list-empty">No pudimos obtener tu ubicación. Revisa los permisos del navegador e intenta nuevamente.</p>';
+        });
+    }
+
+    function cargarVetsReales() {
+        fetch('/api/veterinarias/')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al consultar veterinarias');
+                }
+                return response.json();
+            })
+            .then(data => {
+                list.innerHTML = '';
+
+                if (data.length === 0) {
+                    list.innerHTML = '<p class="vets-list-empty">No hay veterinarias registradas aún.</p>';
+                    return;
+                }
+
+                data.forEach(vet => {
+                    L.marker([vet.lat, vet.lng]).addTo(markersLayer)
+                        .bindPopup(`<b>${vet.nombre}</b><br>${vet.direccion}`);
+
+                    list.innerHTML += `
+                        <article class="vet-item" onclick="map.setView([${vet.lat}, ${vet.lng}], 16)">
+                            <h3>${vet.nombre}</h3>
+                            <p>${vet.direccion}</p>
+                            <small>Ver en mapa</small>
+                        </article>
+                    `;
+                });
+            })
+            .catch(error => {
+                console.error(error);
+                list.innerHTML = '<p class="vets-list-empty">No pudimos cargar las veterinarias cercanas en este momento.</p>';
+            });
+    }
+
+    window.addEventListener('load', obtenerUbicacion);
+</script>
+{% endblock %}

@@ -96,40 +96,60 @@
 </main>
 
 <footer class="footer">
-    <p>© 2026 Pet Care Connect</p>
+    <p>&copy; 2026 Pet Care Connect</p>
 </footer>
 
 <script>
     var map = L.map('map').setView([0, 0], 2);
+    var markersLayer = L.layerGroup().addTo(map);
+    var list = document.getElementById('vets-list');
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
+    var baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd',
+        maxZoom: 20,
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+        crossOrigin: true
+    });
+
+    baseLayer.on('tileerror', function() {
+        list.innerHTML = '<p class="text-sm text-amber-700 text-center py-10">No se pudo cargar el mapa base en este navegador. Puedes volver a intentar con el botón de ubicación.</p>';
+    });
+
+    baseLayer.addTo(map);
 
     function obtenerUbicacion() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                
-                map.setView([lat, lon], 14);
-                setTimeout(() => { map.invalidateSize(); }, 200);
-
-                L.marker([lat, lon]).addTo(map).bindPopup("<b>Tú estás aquí</b>").openPopup();
-                
-                cargarVetsReales();
-            }, function(error) {
-                console.error(error);
-            });
+        if (!navigator.geolocation) {
+            list.innerHTML = '<p class="text-sm text-slate-500 text-center py-10">Tu navegador no soporta geolocalización.</p>';
+            return;
         }
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            map.setView([lat, lon], 14);
+            setTimeout(() => { map.invalidateSize(); }, 200);
+
+            markersLayer.clearLayers();
+            L.marker([lat, lon]).addTo(markersLayer).bindPopup("<b>Tú estás aquí</b>").openPopup();
+
+            cargarVetsReales();
+        }, function(error) {
+            console.error(error);
+            list.innerHTML = '<p class="text-sm text-slate-500 text-center py-10">No pudimos obtener tu ubicación. Revisa los permisos del navegador e intenta nuevamente.</p>';
+        });
     }
 
     function cargarVetsReales() {
         fetch('/api/veterinarias/')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al consultar veterinarias');
+                }
+                return response.json();
+            })
             .then(data => {
-                const list = document.getElementById('vets-list');
-                list.innerHTML = ''; 
+                list.innerHTML = '';
 
                 if (data.length === 0) {
                     list.innerHTML = '<p class="text-center py-10 text-slate-500">No hay veterinarias registradas aún.</p>';
@@ -137,7 +157,7 @@
                 }
 
                 data.forEach(vet => {
-                    L.marker([vet.lat, vet.lng]).addTo(map)
+                    L.marker([vet.lat, vet.lng]).addTo(markersLayer)
                         .bindPopup(`<b>${vet.nombre}</b><br>${vet.direccion}`);
 
                     list.innerHTML += `
@@ -151,6 +171,10 @@
                         </div>
                     `;
                 });
+            })
+            .catch(error => {
+                console.error(error);
+                list.innerHTML = '<p class="text-sm text-slate-500 text-center py-10">No pudimos cargar las veterinarias cercanas en este momento.</p>';
             });
     }
 

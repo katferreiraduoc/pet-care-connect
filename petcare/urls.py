@@ -1,7 +1,8 @@
 from django.contrib import admin
 from mascotas.views import (
-    dieta, home, agregar_mascota, mis_mascotas, 
-    citas, panel_control, registros_medicos, descargar_ficha_pdf
+    dieta, home, agregar_mascota, mis_mascotas,
+    citas, panel_control, registros_medicos, descargar_ficha_pdf,
+    veterinarias_cercanas
 )
 from django.urls import path, include
 
@@ -14,6 +15,7 @@ urlpatterns = [
     path('registros-medicos/', registros_medicos, name='registros_medicos'),
     path('mascota/<int:mascota_id>/pdf/', descargar_ficha_pdf, name='descargar_ficha_pdf'),
     path('dieta/', dieta, name='dieta'),
+    path('veterinarias-cercanas/', veterinarias_cercanas, name='veterinarias_cercanas'),
     path('panel-control/', panel_control, name='panel_control'),        
     path('', include('usuarios.urls')),
 ]

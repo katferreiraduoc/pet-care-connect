@@ -67,6 +67,12 @@
         Dieta
     </a>
 
+    <a href="{% url 'veterinarias_cercanas' %}" 
+        class="{% if request.resolver_match.url_name == 'veterinarias_cercanas' %}active{% endif %}">
+        <span class="material-symbols-outlined">location_on</span>
+        Veterinarias Cercanas
+    </a>
+
 </nav>
 
     <div class="bottom-menu">

@@ -3,22 +3,12 @@ from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-<<<<<<< HEAD
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse
-from django.utils import timezone
-from django.template.loader import get_template
-import calendar
-=======
 from django.db.models import Max
-from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import timezone
->>>>>>> 4bec2ef7f45a15bfdaada642edbd5d4db3eaf35c
-
-
 from xhtml2pdf import pisa
 
 from citas.forms import CitaForm, RegistroMedicoForm
@@ -31,6 +21,11 @@ from .models import Alimentacion, Mascota, Vacuna
 
 def home(request):
     return render(request, "home.html")
+
+
+@login_required
+def veterinarias_cercanas(request):
+    return render(request, "veterinarias_cercanas.html")
 
 
 def _edad_legible(fecha_nacimiento, hoy):
@@ -46,7 +41,10 @@ def _edad_legible(fecha_nacimiento, hoy):
 def _normalizar_fecha_actividad(valor):
     if hasattr(valor, "hour"):
         return valor
-    return timezone.make_aware(timezone.datetime.combine(valor, timezone.datetime.min.time()))
+    return timezone.make_aware(
+        timezone.datetime.combine(valor, timezone.datetime.min.time())
+    )
+
 
 @login_required
 def agregar_mascota(request):
@@ -63,13 +61,8 @@ def agregar_mascota(request):
         messages.error(request, "Revisa los datos del formulario antes de guardar.")
     else:
         form = MascotaForm(initial={"sexo": "macho", "peso": "12.5"})
-<<<<<<< HEAD
-    return render(request, 'mascota_add.html', {"form": form})
-=======
-
     return render(request, "mascota_add.html", {"form": form})
 
->>>>>>> 4bec2ef7f45a15bfdaada642edbd5d4db3eaf35c
 
 @login_required
 def mis_mascotas(request):
@@ -79,18 +72,7 @@ def mis_mascotas(request):
     hoy = timezone.localdate()
 
     for mascota in mascotas:
-<<<<<<< HEAD
-        if mascota.fecha_nacimiento:
-            edad_anios = hoy.year - mascota.fecha_nacimiento.year - (
-                (hoy.month, hoy.day) < (mascota.fecha_nacimiento.month, mascota.fecha_nacimiento.day)
-            )
-            mascota.edad_legible = f"{edad_anios} año" if edad_anios == 1 else f"{edad_anios} años"
-        else:
-            mascota.edad_legible = "Edad no registrada"
-
-=======
         mascota.edad_legible = _edad_legible(mascota.fecha_nacimiento, hoy)
->>>>>>> 4bec2ef7f45a15bfdaada642edbd5d4db3eaf35c
         mascota.especie_label = (mascota.especie or "Mascota").capitalize()
         mascota.raza_label = mascota.raza or "Raza no especificada"
         mascota.inicial = mascota.nombre[:1].upper() if mascota.nombre else "M"
@@ -137,22 +119,43 @@ def citas(request):
     for semana in cal.monthdatescalendar(hoy.year, hoy.month):
         dias_semana = []
         for dia in semana:
-            citas_dia = [c for c in proximas_citas if timezone.localtime(c.fecha_cita).date() == dia]
-            dias_semana.append({
-                "date": dia,
-                "is_current_month": dia.month == hoy.month,
-                "is_today": dia == hoy,
-                "appointments": citas_dia[:2],
-            })
+            citas_dia = [
+                c for c in proximas_citas if timezone.localtime(c.fecha_cita).date() == dia
+            ]
+            dias_semana.append(
+                {
+                    "date": dia,
+                    "is_current_month": dia.month == hoy.month,
+                    "is_today": dia == hoy,
+                    "appointments": citas_dia[:2],
+                }
+            )
         semanas.append(dias_semana)
 
-    meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+    meses = [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre",
+    ]
 
     context = {
         "form": form,
         "mascotas_usuario": mascotas_usuario,
         "proximas_citas": proximas_citas[:5],
-        "total_citas_mes": sum(1 for c in proximas_citas if timezone.localtime(c.fecha_cita).month == hoy.month),
+        "total_citas_mes": sum(
+            1
+            for cita in proximas_citas
+            if timezone.localtime(cita.fecha_cita).month == hoy.month
+        ),
         "calendar_weeks": semanas,
         "calendar_title": f"{meses[hoy.month - 1]} {hoy.year}",
     }
@@ -172,7 +175,11 @@ def registros_medicos(request):
             selected_pet = mascotas_usuario.first()
 
     if request.method == "POST":
-        form = RegistroMedicoForm(request.POST, usuario=request.user, selected_pet=selected_pet)
+        form = RegistroMedicoForm(
+            request.POST,
+            usuario=request.user,
+            selected_pet=selected_pet,
+        )
         if form.is_valid():
             atencion = form.save()
             mascota = atencion.mascota
@@ -193,23 +200,31 @@ def registros_medicos(request):
                     observaciones=atencion.observaciones,
                 )
 
+            tratamiento_nombre = form.cleaned_data.get("tratamiento_nombre")
+            if tratamiento_nombre:
+                Tratamiento.objects.create(
+                    nombre_tratamiento=tratamiento_nombre,
+                    descripcion=atencion.tratamiento_indicado,
+                    medicamento=form.cleaned_data.get("medicamento"),
+                    dosis=form.cleaned_data.get("dosis"),
+                    frecuencia=form.cleaned_data.get("frecuencia"),
+                    fecha_inicio=atencion.fecha_atencion,
+                    fecha_fin=form.cleaned_data.get("fecha_fin_tratamiento"),
+                    atencion_medica=atencion,
+                )
+
             messages.success(request, f"Registro médico guardado para {mascota.nombre}.")
             return HttpResponseRedirect(f"{reverse('registros_medicos')}?pet={mascota.id}")
-
     else:
-        form = RegistroMedicoForm(usuario=request.user, selected_pet=selected_pet, initial={"fecha_atencion": timezone.localdate()})
+        form = RegistroMedicoForm(
+            usuario=request.user,
+            selected_pet=selected_pet,
+            initial={"fecha_atencion": timezone.localdate()},
+        )
 
     atenciones = []
     vacunas = []
     tratamientos = []
-<<<<<<< HEAD
-    timeline = []
-
-    if selected_pet:
-        atenciones = AtencionMedica.objects.filter(mascota=selected_pet).order_by("-fecha_atencion")
-        vacunas = Vacuna.objects.filter(mascota=selected_pet).order_by("-fecha_aplicacion")
-        tratamientos = Tratamiento.objects.filter(atencion_medica__mascota=selected_pet).order_by("-fecha_inicio")
-=======
     alergias_activas = []
     proxima_vacuna = None
     veterinario_cabecera = None
@@ -282,54 +297,65 @@ def registros_medicos(request):
                 ),
             }
         )
->>>>>>> 4bec2ef7f45a15bfdaada642edbd5d4db3eaf35c
 
-        for a in atenciones:
-            timeline.append({"kind": "atencion", "date": a.fecha_atencion, "title": a.tipo_atencion, "description": a.diagnostico})
-        for v in vacunas:
-            timeline.append({"kind": "vacuna", "date": v.fecha_aplicacion, "title": v.nombre_vacuna, "description": v.observaciones})
-        
-        timeline.sort(key=lambda x: x["date"], reverse=True)
+    for tratamiento in tratamientos:
+        timeline.append(
+            {
+                "kind": "tratamiento",
+                "date": tratamiento.fecha_inicio,
+                "title": tratamiento.nombre_tratamiento,
+                "subtitle": "Tratamiento",
+                "description": tratamiento.medicamento
+                or tratamiento.descripcion
+                or "Tratamiento registrado.",
+                "extra": tratamiento.frecuencia or tratamiento.dosis,
+            }
+        )
+
+    timeline.sort(key=lambda item: item["date"], reverse=True)
 
     context = {
         "form": form,
         "mascotas_usuario": mascotas_usuario,
         "selected_pet": selected_pet,
+        "alergias_activas": alergias_activas,
+        "proxima_vacuna": proxima_vacuna,
+        "tratamientos_activos": [t for t in tratamientos if t.estado == "activo"],
+        "veterinario_cabecera": veterinario_cabecera,
         "timeline": timeline,
     }
     return render(request, "registros_medicos.html", context)
 
-<<<<<<< HEAD
+
 @login_required
 def descargar_ficha_pdf(request, mascota_id):
     mascota = get_object_or_404(Mascota, id=mascota_id, usuario=request.user)
     vacunas = Vacuna.objects.filter(mascota=mascota).order_by("-fecha_aplicacion")
-    atenciones = AtencionMedica.objects.filter(mascota=mascota).order_by("-fecha_atencion")
-    
-    template_path = 'mascotaficha/mascota_ficha.html'
-    context = {
-        'mascota': mascota,
-        'vacunas': vacunas,
-        'atenciones': atenciones,
-        'hoy': timezone.now()
-    }
-    
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="ficha_{mascota.nombre}.pdf"'
-    
-    template = get_template(template_path)
-    html = template.render(context)
+    atenciones = AtencionMedica.objects.filter(mascota=mascota).order_by(
+        "-fecha_atencion"
+    )
+
+    template = get_template("mascotaficha/mascota_ficha.html")
+    html = template.render(
+        {
+            "mascota": mascota,
+            "vacunas": vacunas,
+            "atenciones": atenciones,
+            "hoy": timezone.now(),
+        }
+    )
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = (
+        f'attachment; filename="ficha_{mascota.nombre}.pdf"'
+    )
 
     pisa_status = pisa.CreatePDF(html, dest=response)
-    
     if pisa_status.err:
-       return HttpResponse('Error al generar PDF')
-       
+        return HttpResponse("Error al generar PDF", status=500)
+
     return response
-def dieta(request):
-    return render(request, 'dieta.html')
-=======
->>>>>>> 4bec2ef7f45a15bfdaada642edbd5d4db3eaf35c
+
 
 @login_required
 def dieta(request):
@@ -396,9 +422,6 @@ def dieta(request):
 
 @login_required
 def panel_control(request):
-<<<<<<< HEAD
-    return render(request, 'panel_control.html')
-=======
     hoy = timezone.localdate()
     ahora = timezone.now()
     semana_siguiente = hoy + timedelta(days=7)
@@ -608,4 +631,3 @@ def panel_control(request):
         "saludo_nombre": request.user.first_name or request.user.username,
     }
     return render(request, "panel_control.html", context)
->>>>>>> 4bec2ef7f45a15bfdaada642edbd5d4db3eaf35c
