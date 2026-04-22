@@ -146,11 +146,62 @@ http://127.0.0.1:8000/
 - `/` : portada pública
 - `/panel-control/` : panel principal del usuario autenticado
 - `/mis_mascotas/` : listado de mascotas del usuario
+- `/mis_mascotas/<id>/` : detalle de una mascota del usuario
 - `/registros-medicos/` : historial médico
 - `/mascota/<id>/pdf/` : descarga de ficha médica en PDF
 - `/dieta/` : seguimiento de alimentación
 - `/veterinarias-cercanas/` : mapa de veterinarias para usuarios logueados
 - `/api/veterinarias/` : endpoint JSON con veterinarias registradas
+
+## Tabla de evidencias
+
+Las siguientes historias de usuario quedaron verificadas mediante pruebas automatizadas con `python manage.py test`.
+
+### HU1 - Registro de usuario
+
+| Criterio | Estado |
+|---|---|
+| El usuario puede acceder al formulario de registro | Aprobado |
+| El usuario puede ingresar nombre, correo y contraseña | Aprobado |
+| El sistema valida formato de correo electrónico | Aprobado |
+| El sistema evita registros duplicados | Aprobado |
+| El sistema muestra mensaje de confirmación | Aprobado |
+
+### HU2 - Inicio de sesión
+
+| Criterio | Estado |
+|---|---|
+| El usuario puede ingresar sus credenciales | Aprobado |
+| El sistema valida credenciales correctamente | Aprobado |
+| Se muestra mensaje de error si son incorrectas | Aprobado |
+| El usuario es redirigido al sistema | Aprobado |
+
+### HU5 - Cerrar sesión
+
+| Criterio | Estado |
+|---|---|
+| Existe opción visible para cerrar sesión | Aprobado |
+| La sesión se cierra correctamente | Aprobado |
+| Redirección posterior al cierre de sesión | Aprobado |
+
+Nota: actualmente el cierre de sesión redirige al inicio (`/`) y no al login.
+
+### HU6 - Registrar mascota
+
+| Criterio | Estado |
+|---|---|
+| El usuario puede ingresar datos de la mascota | Aprobado |
+| La mascota se asocia al usuario | Aprobado |
+| La información se guarda correctamente | Aprobado |
+| Se muestra confirmación | Aprobado |
+
+### HU7 - Visualizar mascotas
+
+| Criterio | Estado |
+|---|---|
+| Se muestra listado de mascotas | Aprobado |
+| Se visualizan datos básicos | Aprobado |
+| Se puede acceder al detalle | Aprobado |
 
 ## Documentación de base de datos
 
