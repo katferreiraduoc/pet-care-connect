@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalle de cita{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/panel_control.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail_views.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-page detail-page">
+    <div class="dashboard-hero detail-hero">
+        <div>
+            <p class="dashboard-kicker">Cita veterinaria</p>
+            <h1>{{ cita.mascota.nombre }}</h1>
+            <p class="dashboard-copy">
+                Revisa el detalle de la cita agendada para <strong>{{ cita.mascota.nombre }}</strong>,
+                con fecha, horario, motivo y contexto clínico.
+            </p>
+        </div>
+        <div class="detail-hero-actions">
+            <a href="{% url 'citas' %}" class="hero-action">Volver a citas</a>
+        </div>
+    </div>
+
+    <div class="dashboard-metrics detail-metrics">
+        <article class="metric-card warm">
+            <span class="metric-label">Mascota</span>
+            <strong>{{ cita.mascota.nombre }}</strong>
+            <p>Paciente asociado a la cita</p>
+        </article>
+        <article class="metric-card fresh">
+            <span class="metric-label">Estado</span>
+            <strong>{{ cita.get_estado_display }}</strong>
+            <p>Situación actual de la atención</p>
+        </article>
+        <article class="metric-card soft">
+            <span class="metric-label">Fecha</span>
+            <strong>{{ cita.fecha_cita|date:"d/m/Y" }}</strong>
+            <p>Día programado de la visita</p>
+        </article>
+        <article class="metric-card">
+            <span class="metric-label">Hora</span>
+            <strong>{{ cita.fecha_cita|date:"H:i" }}</strong>
+            <p>Horario de atención</p>
+        </article>
+    </div>
+
+    <div class="dashboard-layout detail-layout">
+        <div class="dashboard-main">
+            <section class="dashboard-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Resumen de la cita</h2>
+                        <p>Información principal para revisar la visita programada.</p>
+                    </div>
+                </div>
+
+                <div class="pet-overview-item detail-summary-card">
+                    <div class="pet-top">
+                        <div class="pet-avatar">{{ cita.mascota.nombre|slice:":1"|upper }}</div>
+                        <div>
+                            <h3>{{ cita.motivo }}</h3>
+                            <p>{{ cita.mascota.nombre }}</p>
+                        </div>
+                        <span class="pet-species">{{ cita.get_estado_display }}</span>
+                    </div>
+
+                    <div class="pet-stats">
+                        <div>
+                            <span>Fecha</span>
+                            <strong>{{ cita.fecha_cita|date:"d/m/Y" }}</strong>
+                        </div>
+                        <div>
+                            <span>Hora</span>
+                            <strong>{{ cita.fecha_cita|date:"H:i" }}</strong>
+                        </div>
+                        <div>
+                            <span>Clínica</span>
+                            <strong>{{ cita.clinica|default:"No registrada" }}</strong>
+                        </div>
+                        <div>
+                            <span>Veterinario</span>
+                            <strong>{{ cita.veterinario|default:"No registrado" }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Observaciones</h2>
+                        <p>Notas adicionales asociadas a la cita veterinaria.</p>
+                    </div>
+                </div>
+
+                <article class="activity-item detail-note-card">
+                    <div class="activity-icon">
+                        <span class="material-symbols-outlined">event_note</span>
+                    </div>
+                    <div class="activity-body">
+                        <h3>Detalle registrado</h3>
+                        <p>{{ cita.observaciones|default:"Sin observaciones adicionales." }}</p>
+                    </div>
+                </article>
+            </section>
+        </div>
+
+        <aside class="dashboard-side">
+            <section class="dashboard-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Agenda de la visita</h2>
+                        <p>Resumen rápido de la programación registrada.</p>
+                    </div>
+                </div>
+
+                <div class="appointments-list">
+                    <article class="appointment-item">
+                        <div class="appointment-date">
+                            <strong>{{ cita.fecha_cita|date:"d" }}</strong>
+                            <span>{{ cita.fecha_cita|date:"M" }}</span>
+                        </div>
+                        <div class="appointment-body">
+                            <h3>{{ cita.motivo }}</h3>
+                            <p>{{ cita.mascota.nombre }}</p>
+                            <small>{{ cita.fecha_cita|date:"H:i" }}</small>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="dashboard-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Acciones rápidas</h2>
+                        <p>Atajos para regresar al flujo de citas.</p>
+                    </div>
+                </div>
+                <div class="alerts-list">
+                    <article class="alert-item soft">
+                        <div class="alert-dot"></div>
+                        <div class="alert-body">
+                            <h3>Volver al calendario</h3>
+                            <p>Regresa al listado y calendario de citas del usuario.</p>
+                            <a href="{% url 'citas' %}">Ir a citas</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </aside>
+    </div>
+</section>
+{% endblock %}

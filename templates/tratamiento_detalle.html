@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalle de tratamiento{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/panel_control.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail_views.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-page detail-page">
+    <div class="dashboard-hero detail-hero">
+        <div>
+            <p class="dashboard-kicker">Tratamiento médico</p>
+            <h1>{{ tratamiento.nombre_tratamiento }}</h1>
+            <p class="dashboard-copy">
+                Seguimiento completo del tratamiento asociado a <strong>{{ tratamiento.atencion_medica.mascota.nombre }}</strong>,
+                con fechas, indicaciones y contexto clínico en una sola vista.
+            </p>
+        </div>
+        <div class="detail-hero-actions">
+            <a href="{% url 'registros_medicos' %}?pet={{ tratamiento.atencion_medica.mascota.id }}" class="hero-action">Volver a registros</a>
+        </div>
+    </div>
+
+    <div class="dashboard-metrics detail-metrics">
+        <article class="metric-card warm">
+            <span class="metric-label">Mascota</span>
+            <strong>{{ tratamiento.atencion_medica.mascota.nombre }}</strong>
+            <p>Paciente asociado al tratamiento</p>
+        </article>
+        <article class="metric-card fresh">
+            <span class="metric-label">Estado</span>
+            <strong>{{ tratamiento.get_estado_display }}</strong>
+            <p>Seguimiento actual del tratamiento</p>
+        </article>
+        <article class="metric-card soft">
+            <span class="metric-label">Inicio</span>
+            <strong>{{ tratamiento.fecha_inicio|date:"d/m/Y" }}</strong>
+            <p>Fecha registrada de inicio</p>
+        </article>
+        <article class="metric-card">
+            <span class="metric-label">Fin</span>
+            <strong>{% if tratamiento.fecha_fin %}{{ tratamiento.fecha_fin|date:"d/m/Y" }}{% else %}Sin definir{% endif %}</strong>
+            <p>Término estimado del tratamiento</p>
+        </article>
+    </div>
+
+    <div class="dashboard-layout detail-layout">
+        <div class="dashboard-main">
+            <section class="dashboard-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Resumen del tratamiento</h2>
+                        <p>Información principal para revisar indicaciones y administración.</p>
+                    </div>
+                </div>
+
+                <div class="pet-overview-item detail-summary-card">
+                    <div class="pet-top">
+                        <div class="pet-avatar">{{ tratamiento.nombre_tratamiento|slice:":1"|upper }}</div>
+                        <div>
+                            <h3>{{ tratamiento.nombre_tratamiento }}</h3>
+                            <p>{{ tratamiento.medicamento|default:"Sin medicamento especificado" }}</p>
+                        </div>
+                        <span class="pet-species">{{ tratamiento.get_estado_display }}</span>
+                    </div>
+
+                    <div class="pet-stats">
+                        <div>
+                            <span>Dosis</span>
+                            <strong>{{ tratamiento.dosis|default:"No indicada" }}</strong>
+                        </div>
+                        <div>
+                            <span>Frecuencia</span>
+                            <strong>{{ tratamiento.frecuencia|default:"No indicada" }}</strong>
+                        </div>
+                        <div>
+                            <span>Fecha inicio</span>
+                            <strong>{{ tratamiento.fecha_inicio|date:"d/m/Y" }}</strong>
+                        </div>
+                        <div>
+                            <span>Fecha fin</span>
+                            <strong>{% if tratamiento.fecha_fin %}{{ tratamiento.fecha_fin|date:"d/m/Y" }}{% else %}Sin definir{% endif %}</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Indicaciones médicas</h2>
+                        <p>Notas registradas durante la atención asociada.</p>
+                    </div>
+                </div>
+
+                <article class="activity-item detail-note-card">
+                    <div class="activity-icon">
+                        <span class="material-symbols-outlined">medication</span>
+                    </div>
+                    <div class="activity-body">
+                        <h3>Plan indicado</h3>
+                        <p>{{ tratamiento.descripcion|default:"Sin indicaciones registradas." }}</p>
+                    </div>
+                </article>
+            </section>
+        </div>
+
+        <aside class="dashboard-side">
+            <section class="dashboard-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Contexto clínico</h2>
+                        <p>Datos base de la atención médica que dio origen al tratamiento.</p>
+                    </div>
+                </div>
+
+                <div class="appointments-list">
+                    <article class="appointment-item">
+                        <div class="appointment-date">
+                            <strong>{{ tratamiento.atencion_medica.fecha_atencion|date:"d" }}</strong>
+                            <span>{{ tratamiento.atencion_medica.fecha_atencion|date:"M" }}</span>
+                        </div>
+                        <div class="appointment-body">
+                            <h3>{{ tratamiento.atencion_medica.tipo_atencion }}</h3>
+                            <p>{{ tratamiento.atencion_medica.mascota.nombre }}</p>
+                            <small>
+                                {% if tratamiento.atencion_medica.veterinario %}{{ tratamiento.atencion_medica.veterinario }}{% else %}Veterinario no registrado{% endif %}
+                                {% if tratamiento.atencion_medica.clinica %} · {{ tratamiento.atencion_medica.clinica }}{% endif %}
+                            </small>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="dashboard-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Diagnóstico asociado</h2>
+                        <p>Referencia clínica registrada para este caso.</p>
+                    </div>
+                </div>
+                <div class="empty-block detail-text-block">
+                    <p>{{ tratamiento.atencion_medica.diagnostico|default:"Sin diagnóstico registrado." }}</p>
+                </div>
+            </section>
+        </aside>
+    </div>
+</section>
+{% endblock %}

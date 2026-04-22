@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalle de alimentación{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/panel_control.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail_views.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-page detail-page">
+    <div class="dashboard-hero detail-hero">
+        <div>
+            <p class="dashboard-kicker">Alimentación registrada</p>
+            <h1>{{ registro.mascota.nombre }}</h1>
+            <p class="dashboard-copy">
+                Vista detallada del registro alimenticio guardado para tu mascota, con frecuencia,
+                horarios y observaciones.
+            </p>
+        </div>
+        <div class="detail-hero-actions">
+            <a href="{% url 'dieta' %}?pet={{ registro.mascota.id }}" class="hero-action">Volver a dieta</a>
+        </div>
+    </div>
+
+    <div class="dashboard-metrics detail-metrics">
+        <article class="metric-card soft">
+            <span class="metric-label">Tipo de alimento</span>
+            <strong>{{ registro.tipo_alimento|default:"No indicado" }}</strong>
+            <p>Registro principal de la dieta</p>
+        </article>
+        <article class="metric-card warm">
+            <span class="metric-label">Cantidad</span>
+            <strong>{{ registro.cantidad|default:"No indicada" }}</strong>
+            <p>Porción registrada</p>
+        </article>
+        <article class="metric-card fresh">
+            <span class="metric-label">Frecuencia</span>
+            <strong>{{ registro.frecuencia|default:"No indicada" }}</strong>
+            <p>Ritmo de alimentación</p>
+        </article>
+        <article class="metric-card">
+            <span class="metric-label">Horario</span>
+            <strong>{{ registro.horario|default:"No indicado" }}</strong>
+            <p>Bloque horario sugerido</p>
+        </article>
+    </div>
+
+    <div class="dashboard-layout detail-layout">
+        <div class="dashboard-main">
+            <section class="dashboard-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Resumen del plan</h2>
+                        <p>Datos clave para consultar la rutina alimenticia actual.</p>
+                    </div>
+                </div>
+
+                <div class="pet-overview-item detail-summary-card">
+                    <div class="pet-top">
+                        <div class="pet-avatar">{{ registro.mascota.nombre|slice:":1"|upper }}</div>
+                        <div>
+                            <h3>{{ registro.mascota.nombre }}</h3>
+                            <p>{{ registro.marca|default:"Marca no especificada" }}</p>
+                        </div>
+                        <span class="pet-species">Activo</span>
+                    </div>
+
+                    <div class="pet-stats">
+                        <div>
+                            <span>Alimento</span>
+                            <strong>{{ registro.tipo_alimento|default:"No indicado" }}</strong>
+                        </div>
+                        <div>
+                            <span>Cantidad</span>
+                            <strong>{{ registro.cantidad|default:"No indicada" }}</strong>
+                        </div>
+                        <div>
+                            <span>Frecuencia</span>
+                            <strong>{{ registro.frecuencia|default:"No indicada" }}</strong>
+                        </div>
+                        <div>
+                            <span>Horario</span>
+                            <strong>{{ registro.horario|default:"No indicado" }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Observaciones</h2>
+                        <p>Indicaciones complementarias del registro guardado.</p>
+                    </div>
+                </div>
+
+                <article class="activity-item detail-note-card">
+                    <div class="activity-icon">
+                        <span class="material-symbols-outlined">restaurant</span>
+                    </div>
+                    <div class="activity-body">
+                        <h3>Notas del registro</h3>
+                        <p>{{ registro.observaciones|default:"Sin observaciones registradas." }}</p>
+                    </div>
+                </article>
+            </section>
+        </div>
+
+        <aside class="dashboard-side">
+            <section class="dashboard-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Marca y fecha</h2>
+                        <p>Referencia de producto y momento del registro.</p>
+                    </div>
+                </div>
+
+                <div class="appointments-list">
+                    <article class="appointment-item">
+                        <div class="appointment-date">
+                            <strong>{{ registro.fecha_registro|date:"d" }}</strong>
+                            <span>{{ registro.fecha_registro|date:"M" }}</span>
+                        </div>
+                        <div class="appointment-body">
+                            <h3>{{ registro.marca|default:"Marca no especificada" }}</h3>
+                            <p>{{ registro.mascota.nombre }}</p>
+                            <small>{{ registro.fecha_registro|date:"H:i" }}</small>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="dashboard-card">
+                <div class="section-head">
+                    <div>
+                        <h2>Acciones rápidas</h2>
+                        <p>Atajos para volver al seguimiento alimenticio.</p>
+                    </div>
+                </div>
+                <div class="alerts-list">
+                    <article class="alert-item soft">
+                        <div class="alert-dot"></div>
+                        <div class="alert-body">
+                            <h3>Volver al historial</h3>
+                            <p>Regresa al listado de dieta filtrado por esta mascota.</p>
+                            <a href="{% url 'dieta' %}?pet={{ registro.mascota.id }}">Ir a dieta</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </aside>
+    </div>
+</section>
+{% endblock %}

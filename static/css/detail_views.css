@@ -1,0 +1,68 @@
+.detail-page {
+    padding-bottom: 36px;
+}
+
+.detail-hero {
+    align-items: center;
+}
+
+.detail-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.detail-secondary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 22px;
+    border-radius: 18px;
+    border: 1px solid rgba(191, 204, 196, 0.9);
+    background: #fff;
+    color: #264737;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.detail-layout {
+    align-items: start;
+}
+
+.detail-summary-card {
+    background:
+        radial-gradient(circle at top right, rgba(247, 205, 124, 0.18), transparent 34%),
+        #f8fbf9;
+}
+
+.detail-note-card {
+    align-items: stretch;
+    background:
+        radial-gradient(circle at top right, rgba(188, 217, 202, 0.22), transparent 36%),
+        #f8faf9;
+}
+
+.detail-note-card .activity-body p {
+    margin-top: 10px;
+    line-height: 1.7;
+}
+
+.detail-text-block {
+    justify-items: start;
+    text-align: left;
+    padding: 4px 0;
+}
+
+.detail-text-block p {
+    margin: 0;
+    color: #506158;
+    line-height: 1.75;
+}
+
+@media (max-width: 900px) {
+    .detail-hero-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}

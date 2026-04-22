@@ -80,6 +80,7 @@
                     {% if registro.observaciones %}
                     <p class="diet-note">{{ registro.observaciones }}</p>
                     {% endif %}
+                    <p><a href="{% url 'detalle_alimentacion' registro.id %}">Ver detalle</a></p>
                 </article>
                 {% empty %}
                 <div class="diet-empty">

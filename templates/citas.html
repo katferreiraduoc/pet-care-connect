@@ -171,6 +171,7 @@
                             {% if cita.clinica %}
                             <small>{{ cita.clinica }}</small>
                             {% endif %}
+                            <p><a href="{% url 'detalle_cita' cita.id %}">Ver detalle</a></p>
                         </div>
                     </article>
                     {% empty %}

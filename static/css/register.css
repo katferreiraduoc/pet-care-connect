@@ -224,6 +224,15 @@ a {
     font-size: 0.9rem;
 }
 
+.toggle-password-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 4px 0 18px;
+    color: #567064;
+    font-weight: 700;
+}
+
 .form-errors {
     margin-bottom: 18px;
     padding: 14px 16px;

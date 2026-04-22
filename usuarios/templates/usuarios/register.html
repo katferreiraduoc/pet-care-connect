@@ -59,7 +59,7 @@
                             <div class="section-head">
                                 <span class="material-symbols-outlined">badge</span>
                                 <div>
-                                    <h2>Informacion personal</h2>
+                                    <h2>Información personal</h2>
                                     <p>Datos base para identificar tu cuenta.</p>
                                 </div>
                             </div>
@@ -109,14 +109,14 @@
 
                             <div class="field-row">
                                 <div class="field-group">
-                                    <label for="{{ form.email.id_for_label }}">Correo electronico</label>
+                                    <label for="{{ form.email.id_for_label }}">Correo electrónico</label>
                                     {{ form.email }}
                                     {% for error in form.email.errors %}
                                     <p class="field-error">{{ error }}</p>
                                     {% endfor %}
                                 </div>
                                 <div class="field-group">
-                                    <label for="{{ form.telefono.id_for_label }}">Telefono</label>
+                                    <label for="{{ form.telefono.id_for_label }}">Teléfono</label>
                                     {{ form.telefono }}
                                     {% for error in form.telefono.errors %}
                                     <p class="field-error">{{ error }}</p>
@@ -141,6 +141,11 @@
                                 </div>
                             </div>
 
+                            <label class="toggle-password-row" for="togglePasswords">
+                                <input type="checkbox" id="togglePasswords">
+                                Mostrar contraseñas
+                            </label>
+
                             {% if form.password1.help_text %}
                             <div class="help-card">
                                 {{ form.password1.help_text|safe }}
@@ -162,5 +167,6 @@
             </div>
         </section>
     </main>
+    <script src="{% static 'js/register.js' %}"></script>
 </body>
 </html>

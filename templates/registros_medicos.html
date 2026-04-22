@@ -87,7 +87,7 @@
                 <div class="stack-list">
                     {% for tratamiento in tratamientos_activos %}
                     <div class="stack-item">
-                        <strong>{{ tratamiento.nombre_tratamiento }}</strong>
+                        <strong><a href="{% url 'detalle_tratamiento' tratamiento.id %}">{{ tratamiento.nombre_tratamiento }}</a></strong>
                         <p>{{ tratamiento.medicamento|default:tratamiento.descripcion|default:"Sin detalle" }}</p>
                         {% if tratamiento.frecuencia %}
                         <small>{{ tratamiento.frecuencia }}</small>

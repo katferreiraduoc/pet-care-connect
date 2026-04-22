@@ -11,6 +11,7 @@ from xhtml2pdf import pisa
 
 from citas.forms import CitaForm, RegistroMedicoForm
 from citas.models import AtencionMedica, Cita
+from tratamientos.models import Tratamiento
 
 from .forms import AlimentacionForm, MascotaForm
 from .models import Alimentacion, Mascota, Vacuna
@@ -101,6 +102,36 @@ def detalle_mascota(request, mascota_id):
         "mascota": mascota,
     }
     return render(request, "mascota_detalle.html", context)
+
+
+@login_required
+def detalle_cita(request, cita_id):
+    cita = get_object_or_404(
+        Cita.objects.select_related("mascota"),
+        id=cita_id,
+        mascota__usuario=request.user,
+    )
+    return render(request, "cita_detalle.html", {"cita": cita})
+
+
+@login_required
+def detalle_tratamiento(request, tratamiento_id):
+    tratamiento = get_object_or_404(
+        Tratamiento.objects.select_related("atencion_medica__mascota"),
+        id=tratamiento_id,
+        atencion_medica__mascota__usuario=request.user,
+    )
+    return render(request, "tratamiento_detalle.html", {"tratamiento": tratamiento})
+
+
+@login_required
+def detalle_alimentacion(request, alimentacion_id):
+    registro = get_object_or_404(
+        Alimentacion.objects.select_related("mascota"),
+        id=alimentacion_id,
+        mascota__usuario=request.user,
+    )
+    return render(request, "alimentacion_detalle.html", {"registro": registro})
 
 
 @login_required
