@@ -136,6 +136,7 @@ class RegistroMedicoForm(forms.ModelForm):
             "tipo_atencion",
             "diagnostico",
             "tratamiento_indicado",
+            "examenes_ordenados",
             "veterinario",
             "clinica",
             "observaciones",
@@ -185,6 +186,3 @@ class RegistroMedicoForm(forms.ModelForm):
             self.fields["mascota"].queryset = queryset
             if selected_pet is not None:
                 self.fields["mascota"].initial = selected_pet
-
-    def save(self, commit=True):
-        return super().save(commit=commit)

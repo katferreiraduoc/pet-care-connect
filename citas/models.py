@@ -27,6 +27,7 @@ class AtencionMedica(models.Model):
     tipo_atencion = models.CharField(max_length=100)
     diagnostico = models.TextField(blank=True, null=True)
     tratamiento_indicado = models.TextField(blank=True, null=True)
+    examenes_ordenados = models.TextField(blank=True, null=True)
     veterinario = models.CharField(max_length=100, blank=True, null=True)
     clinica = models.CharField(max_length=120, blank=True, null=True)
     observaciones = models.TextField(blank=True, null=True)
