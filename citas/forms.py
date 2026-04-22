@@ -4,7 +4,6 @@ from django import forms
 from django.utils import timezone
 
 from mascotas.models import Mascota
-from tratamientos.models import Tratamiento
 
 from .models import AtencionMedica, Cita
 
@@ -123,7 +122,7 @@ class RegistroMedicoForm(forms.ModelForm):
             attrs={
                 "class": "form-input form-textarea",
                 "rows": 3,
-                "placeholder": "Ej. Hemograma, perfil bioquimico, ecografia abdominal",
+                "placeholder": "Ej. Hemograma, perfil bioquímico, ecografía abdominal",
             }
         ),
     )
@@ -172,7 +171,7 @@ class RegistroMedicoForm(forms.ModelForm):
                 attrs={
                     "class": "form-input form-textarea",
                     "rows": 4,
-                    "placeholder": "Notas adicionales de la atencion",
+                    "placeholder": "Notas adicionales de la atención",
                 }
             ),
         }

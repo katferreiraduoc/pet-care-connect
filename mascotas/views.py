@@ -16,8 +16,11 @@ from tratamientos.models import Tratamiento
 from .forms import AlimentacionForm, MascotaForm
 from .models import Alimentacion, Mascota, Vacuna
 from .services import (
+    build_calendar_context,
     build_dashboard_context,
     build_medical_records_context,
+    decorate_pet,
+    decorate_pets,
     get_selected_pet,
     save_medical_record,
 )
@@ -30,16 +33,6 @@ def home(request):
 @login_required
 def veterinarias_cercanas(request):
     return render(request, "veterinarias_cercanas.html")
-
-
-def _edad_legible(fecha_nacimiento, hoy):
-    if not fecha_nacimiento:
-        return "Edad no registrada"
-
-    edad_anios = hoy.year - fecha_nacimiento.year - (
-        (hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day)
-    )
-    return f"{edad_anios} año" if edad_anios == 1 else f"{edad_anios} años"
 
 
 def _normalizar_fecha_actividad(valor):
@@ -70,16 +63,10 @@ def agregar_mascota(request):
 
 @login_required
 def mis_mascotas(request):
-    mascotas = list(
-        Mascota.objects.filter(usuario=request.user).order_by("-fecha_registro")
+    mascotas = decorate_pets(
+        list(Mascota.objects.filter(usuario=request.user).order_by("-fecha_registro")),
+        timezone.localdate(),
     )
-    hoy = timezone.localdate()
-
-    for mascota in mascotas:
-        mascota.edad_legible = _edad_legible(mascota.fecha_nacimiento, hoy)
-        mascota.especie_label = (mascota.especie or "Mascota").capitalize()
-        mascota.raza_label = mascota.raza or "Raza no especificada"
-        mascota.inicial = mascota.nombre[:1].upper() if mascota.nombre else "M"
 
     context = {
         "mascotas": mascotas,
@@ -92,11 +79,7 @@ def mis_mascotas(request):
 @login_required
 def detalle_mascota(request, mascota_id):
     mascota = get_object_or_404(Mascota, id=mascota_id, usuario=request.user)
-    hoy = timezone.localdate()
-    mascota.edad_legible = _edad_legible(mascota.fecha_nacimiento, hoy)
-    mascota.especie_label = (mascota.especie or "Mascota").capitalize()
-    mascota.raza_label = mascota.raza or "Raza no especificada"
-    mascota.inicial = mascota.nombre[:1].upper() if mascota.nombre else "M"
+    decorate_pet(mascota, timezone.localdate())
 
     context = {
         "mascota": mascota,
@@ -163,38 +146,11 @@ def citas(request):
     )
 
     hoy = timezone.localdate()
-    cal = calendar.Calendar(firstweekday=6)
-    semanas = []
-    for semana in cal.monthdatescalendar(hoy.year, hoy.month):
-        dias_semana = []
-        for dia in semana:
-            citas_dia = [
-                c for c in proximas_citas if timezone.localtime(c.fecha_cita).date() == dia
-            ]
-            dias_semana.append(
-                {
-                    "date": dia,
-                    "is_current_month": dia.month == hoy.month,
-                    "is_today": dia == hoy,
-                    "appointments": citas_dia[:2],
-                }
-            )
-        semanas.append(dias_semana)
-
-    meses = [
-        "Enero",
-        "Febrero",
-        "Marzo",
-        "Abril",
-        "Mayo",
-        "Junio",
-        "Julio",
-        "Agosto",
-        "Septiembre",
-        "Octubre",
-        "Noviembre",
-        "Diciembre",
-    ]
+    calendar_context = build_calendar_context(
+        proximas_citas,
+        hoy,
+        calendar_factory=calendar.Calendar,
+    )
 
     context = {
         "form": form,
@@ -205,8 +161,7 @@ def citas(request):
             for cita in proximas_citas
             if timezone.localtime(cita.fecha_cita).month == hoy.month
         ),
-        "calendar_weeks": semanas,
-        "calendar_title": f"{meses[hoy.month - 1]} {hoy.year}",
+        **calendar_context,
     }
     return render(request, "citas.html", context)
 
@@ -271,15 +226,10 @@ def descargar_ficha_pdf(request, mascota_id):
 
 @login_required
 def dieta(request):
-    mascotas_usuario = Mascota.objects.filter(usuario=request.user).order_by("nombre")
-    selected_pet = None
-    selected_pet_id = request.GET.get("pet")
-
-    if mascotas_usuario.exists():
-        if selected_pet_id:
-            selected_pet = mascotas_usuario.filter(id=selected_pet_id).first()
-        if selected_pet is None:
-            selected_pet = mascotas_usuario.first()
+    mascotas_usuario, selected_pet = get_selected_pet(
+        request.user,
+        request.GET.get("pet"),
+    )
 
     if request.method == "POST":
         form = AlimentacionForm(
@@ -336,7 +286,7 @@ def dieta(request):
 def panel_control(request):
     context = build_dashboard_context(
         request.user,
-        edad_legible_fn=_edad_legible,
+        edad_legible_fn=None,
         normalizar_fecha_fn=_normalizar_fecha_actividad,
     )
     return render(request, "panel_control.html", context)

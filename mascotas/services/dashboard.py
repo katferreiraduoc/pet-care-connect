@@ -8,8 +8,12 @@ from citas.models import AtencionMedica, Cita
 from mascotas.models import Alimentacion, Mascota, Vacuna
 from tratamientos.models import Tratamiento
 
+from .pets import decorate_pet
+
 
 def build_dashboard_context(usuario, edad_legible_fn, normalizar_fecha_fn):
+    del edad_legible_fn
+
     hoy = timezone.localdate()
     ahora = timezone.now()
     semana_siguiente = hoy + timedelta(days=7)
@@ -81,10 +85,7 @@ def build_dashboard_context(usuario, edad_legible_fn, normalizar_fecha_fn):
         ultimas_dietas_por_mascota.setdefault(alimentacion.mascota_id, alimentacion)
 
     for mascota in mascotas:
-        mascota.edad_legible = edad_legible_fn(mascota.fecha_nacimiento, hoy)
-        mascota.especie_label = (mascota.especie or "Mascota").capitalize()
-        mascota.raza_label = mascota.raza or "Raza no especificada"
-        mascota.inicial = mascota.nombre[:1].upper() if mascota.nombre else "M"
+        decorate_pet(mascota, hoy)
         mascota.proxima_cita = next(
             (cita for cita in proximas_citas if cita.mascota_id == mascota.id),
             None,
