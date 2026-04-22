@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Perfil de {{ mascota.nombre }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/mis_mascotas.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="pets-page">
+    <div class="pets-hero">
+        <div>
+            <p class="pets-kicker">Perfil de mascota</p>
+            <h1>{{ mascota.nombre }}</h1>
+            <p class="pets-copy">Consulta los datos principales del perfil y mantén a mano la información más importante de tu compañero.</p>
+        </div>
+        <a class="pets-add-button" href="{% url 'mis_mascotas' %}">Volver al listado</a>
+    </div>
+
+    <div class="pets-grid">
+        <article class="pet-card">
+            <div class="pet-card-media">
+                <div class="pet-avatar">{{ mascota.inicial }}</div>
+                <span class="pet-badge {% if mascota.especie == 'gato' %}cat{% else %}dog{% endif %}">
+                    {{ mascota.especie_label }}
+                </span>
+            </div>
+            <div class="pet-card-body">
+                <div class="pet-head">
+                    <div>
+                        <h2>{{ mascota.nombre }}</h2>
+                        <p>{{ mascota.raza_label }}</p>
+                    </div>
+                    <span class="pet-age">{{ mascota.edad_legible }}</span>
+                </div>
+
+                <div class="pet-meta">
+                    <span>
+                        <span class="material-symbols-outlined">straighten</span>
+                        {% if mascota.peso %}{{ mascota.peso }} kg{% else %}Sin peso{% endif %}
+                    </span>
+                    <span>
+                        <span class="material-symbols-outlined">pets</span>
+                        {{ mascota.get_sexo_display }}
+                    </span>
+                </div>
+
+                <div class="pets-summary">
+                    <article class="summary-card">
+                        <span class="summary-label">Fecha de nacimiento</span>
+                        <strong>{% if mascota.fecha_nacimiento %}{{ mascota.fecha_nacimiento|date:"d/m/Y" }}{% else %}No registrada{% endif %}</strong>
+                        <p>Dato base del perfil</p>
+                    </article>
+                    <article class="summary-card warm">
+                        <span class="summary-label">Perfil</span>
+                        <strong>Activo</strong>
+                        <p>Asociado a tu cuenta</p>
+                    </article>
+                </div>
+
+                <div class="pet-footer">
+                    <a href="{% url 'dieta' %}?pet={{ mascota.id }}" class="pet-action">
+                        Ver dieta
+                        <span class="material-symbols-outlined">restaurant</span>
+                    </a>
+                    <a href="{% url 'registros_medicos' %}?pet={{ mascota.id }}" class="pet-action">
+                        Ver registros
+                        <span class="material-symbols-outlined">medical_services</span>
+                    </a>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}

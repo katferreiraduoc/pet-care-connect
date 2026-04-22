@@ -89,6 +89,21 @@ def mis_mascotas(request):
 
 
 @login_required
+def detalle_mascota(request, mascota_id):
+    mascota = get_object_or_404(Mascota, id=mascota_id, usuario=request.user)
+    hoy = timezone.localdate()
+    mascota.edad_legible = _edad_legible(mascota.fecha_nacimiento, hoy)
+    mascota.especie_label = (mascota.especie or "Mascota").capitalize()
+    mascota.raza_label = mascota.raza or "Raza no especificada"
+    mascota.inicial = mascota.nombre[:1].upper() if mascota.nombre else "M"
+
+    context = {
+        "mascota": mascota,
+    }
+    return render(request, "mascota_detalle.html", context)
+
+
+@login_required
 def citas(request):
     mascotas_usuario = Mascota.objects.filter(usuario=request.user).order_by("nombre")
 

@@ -72,10 +72,10 @@
                         <span class="material-symbols-outlined">favorite</span>
                         Perfil activo
                     </span>
-                    <button type="button" class="pet-action" disabled>
+                    <a href="{% url 'detalle_mascota' mascota.id %}" class="pet-action">
                         Ver Perfil
                         <span class="material-symbols-outlined">arrow_forward</span>
-                    </button>
+                    </a>
                 </div>
             </div>
         </article>
