@@ -42,6 +42,14 @@ class RegistroUsuarioForm(UserCreationForm):
                 }
             )
 
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
+
+        if Usuario.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("Ya existe una cuenta registrada con este correo.")
+
+        return email
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"]

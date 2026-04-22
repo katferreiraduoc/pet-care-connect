@@ -1,4 +1,5 @@
 from django.contrib.auth.views import LoginView
+from django.contrib import messages
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
@@ -16,6 +17,7 @@ def registro(request):
         form = RegistroUsuarioForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Cuenta creada correctamente. Ahora puedes iniciar sesión.")
             return redirect("login")
     else:
         form = RegistroUsuarioForm()

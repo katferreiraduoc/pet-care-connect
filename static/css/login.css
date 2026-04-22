@@ -124,6 +124,24 @@ a {
     gap: 18px;
 }
 
+.flash-messages {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.flash-message {
+    padding: 14px 16px;
+    border-radius: 16px;
+    font-weight: 700;
+}
+
+.flash-message.success {
+    background: #e7f6ee;
+    color: #21563e;
+    border: 1px solid #c6e6d4;
+}
+
 .field-group {
     display: grid;
     gap: 8px;
