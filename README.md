@@ -179,7 +179,6 @@ git checkout -b feature/registro-usuario
 - Activa siempre el entorno virtual antes de trabajar.
 - No subas `venv/` ni `.env` al repositorio.
 - Si agregas nuevas librerías, actualiza `requirements.txt`.
-- Si aparece un error como `Table '...usuarios_veterinaria' doesn't exist`, probablemente faltan migraciones por aplicar.
 
 ## Equipo
 
