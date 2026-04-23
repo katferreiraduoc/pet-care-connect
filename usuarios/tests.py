@@ -182,6 +182,72 @@ class PerfilUsuarioTests(TestCase):
         self.assertContains(response, 'href="/perfil/"', html=False)
         self.assertContains(response, "Perfil")
 
+    def test_perfil_permite_actualizar_datos_personales_habilitados(self):
+        self.client.force_login(self.usuario)
+
+        response = self.client.post(
+            reverse("perfil"),
+            {
+                "email": "catalina@example.com",
+                "telefono": "+56 9 9999 0000",
+            },
+            follow=True,
+        )
+
+        self.assertRedirects(response, reverse("perfil"))
+        self.usuario.refresh_from_db()
+        self.assertEqual(self.usuario.first_name, "Kathy")
+        self.assertEqual(self.usuario.last_name, "Gonzalez")
+        self.assertEqual(self.usuario.email, "catalina@example.com")
+        self.assertEqual(self.usuario.telefono, "+56 9 9999 0000")
+        mensajes = list(response.context["messages"])
+        self.assertTrue(
+            any("Tu perfil se actualizo correctamente." in str(m) for m in mensajes)
+        )
+
+    def test_perfil_ignora_intentos_de_modificar_nombre_y_apellido(self):
+        self.client.force_login(self.usuario)
+
+        self.client.post(
+            reverse("perfil"),
+            {
+                "first_name": "Catalina",
+                "last_name": "Ferreira",
+                "email": "kathy.actualizada@example.com",
+                "telefono": "+56 9 9999 0000",
+            },
+        )
+
+        self.usuario.refresh_from_db()
+        self.assertEqual(self.usuario.first_name, "Kathy")
+        self.assertEqual(self.usuario.last_name, "Gonzalez")
+        self.assertEqual(self.usuario.email, "kathy.actualizada@example.com")
+
+    def test_perfil_valida_correo_duplicado_antes_de_guardar(self):
+        Usuario.objects.create_user(
+            username="correo.duplicado",
+            email="duplicado@example.com",
+            password="ClaveSegura123!",
+        )
+        self.client.force_login(self.usuario)
+
+        response = self.client.post(
+            reverse("perfil"),
+            {
+                "email": "duplicado@example.com",
+                "telefono": "+56 9 1234 5678",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.usuario.refresh_from_db()
+        self.assertEqual(self.usuario.email, "kathy@example.com")
+        self.assertIn("email", response.context["form"].errors)
+        self.assertContains(
+            response,
+            "Revisa los datos del formulario antes de guardar.",
+        )
+
 
 class CerrarSesionTests(TestCase):
     def setUp(self):

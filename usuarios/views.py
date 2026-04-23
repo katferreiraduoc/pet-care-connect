@@ -5,7 +5,11 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 
-from .forms import CustomAuthenticationForm, RegistroUsuarioForm
+from .forms import (
+    CustomAuthenticationForm,
+    PerfilUsuarioForm,
+    RegistroUsuarioForm,
+)
 from .models import Veterinaria
 
 class CustomLoginView(LoginView):
@@ -31,7 +35,24 @@ def registro(request):
 
 @login_required
 def perfil(request):
-    return render(request, "usuarios/perfil.html", {"usuario": request.user})
+    if request.method == "POST":
+        form = PerfilUsuarioForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Tu perfil se actualizo correctamente.")
+            return redirect("perfil")
+        messages.error(request, "Revisa los datos del formulario antes de guardar.")
+    else:
+        form = PerfilUsuarioForm(instance=request.user)
+
+    return render(
+        request,
+        "usuarios/perfil.html",
+        {
+            "usuario": request.user,
+            "form": form,
+        },
+    )
 
 def api_veterinarias(request):
     vets = Veterinaria.objects.exclude(latitud__isnull=True).exclude(

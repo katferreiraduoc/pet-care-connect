@@ -13,9 +13,17 @@
         <div>
             <p class="profile-kicker">Cuenta de usuario</p>
             <h1>Mi Perfil</h1>
-            <p class="profile-copy">Consulta los datos registrados en Pet Care Connect para tu cuenta.</p>
+            <p class="profile-copy">Consulta y actualiza los datos registrados en Pet Care Connect para tu cuenta.</p>
         </div>
     </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <div class="profile-layout">
         <section class="profile-card profile-summary">
@@ -42,43 +50,68 @@
         <section class="profile-card">
             <div class="section-head">
                 <div>
-                    <h2>Datos basicos</h2>
-                    <p>Informacion asociada al usuario autenticado.</p>
+                    <h2>Editar datos basicos</h2>
+                    <p>Solo puedes actualizar los datos personales habilitados para tu cuenta.</p>
                 </div>
             </div>
 
-            <dl class="profile-details">
-                <div>
-                    <dt>Nombre</dt>
-                    <dd>{{ usuario.first_name|default:"Sin nombre registrado" }}</dd>
+            <form method="post" class="profile-form" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
                 </div>
-                <div>
-                    <dt>Apellido</dt>
-                    <dd>{{ usuario.last_name|default:"Sin apellido registrado" }}</dd>
+                {% endif %}
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label for="{{ form.email.id_for_label }}">Correo electronico</label>
+                        {{ form.email }}
+                        {% for error in form.email.errors %}
+                        <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="field-group">
+                        <label for="{{ form.telefono.id_for_label }}">Telefono</label>
+                        {{ form.telefono }}
+                        {% for error in form.telefono.errors %}
+                        <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div>
-                    <dt>Correo</dt>
-                    <dd>{{ usuario.email|default:"Sin correo registrado" }}</dd>
+
+                <dl class="profile-details">
+                    <div>
+                        <dt>Nombre</dt>
+                        <dd>{{ usuario.first_name|default:"Sin nombre registrado" }}</dd>
+                    </div>
+                    <div>
+                        <dt>Apellido</dt>
+                        <dd>{{ usuario.last_name|default:"Sin apellido registrado" }}</dd>
+                    </div>
+                    <div>
+                        <dt>Usuario</dt>
+                        <dd>{{ usuario.username }}</dd>
+                    </div>
+                    <div>
+                        <dt>Rol</dt>
+                        <dd>
+                            {% if usuario.rol %}
+                                {{ usuario.rol.nombre }}
+                            {% else %}
+                                Sin rol asignado
+                            {% endif %}
+                        </dd>
+                    </div>
+                </dl>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Guardar cambios</button>
                 </div>
-                <div>
-                    <dt>Usuario</dt>
-                    <dd>{{ usuario.username }}</dd>
-                </div>
-                <div>
-                    <dt>Telefono</dt>
-                    <dd>{{ usuario.telefono|default:"Sin telefono registrado" }}</dd>
-                </div>
-                <div>
-                    <dt>Rol</dt>
-                    <dd>
-                        {% if usuario.rol %}
-                            {{ usuario.rol.nombre }}
-                        {% else %}
-                            Sin rol asignado
-                        {% endif %}
-                    </dd>
-                </div>
-            </dl>
+            </form>
         </section>
     </div>
 </section>

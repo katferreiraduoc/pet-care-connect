@@ -42,6 +42,27 @@
     gap: 24px;
 }
 
+.messages {
+    display: grid;
+    gap: 12px;
+}
+
+.message {
+    padding: 14px 16px;
+    border-radius: 16px;
+    font-weight: 700;
+}
+
+.message.success {
+    background: #e9f8ef;
+    color: #24603f;
+}
+
+.message.error {
+    background: #fff2f2;
+    color: #a94444;
+}
+
 .profile-card {
     padding: 28px;
     border-radius: 28px;
@@ -112,6 +133,62 @@
     color: #6a7a70;
 }
 
+.profile-form {
+    display: grid;
+    gap: 20px;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.field-group {
+    display: grid;
+    gap: 8px;
+}
+
+.field-group label {
+    color: #567064;
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.form-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: 1px solid #d8e7de;
+    border-radius: 16px;
+    background: #f7fbf8;
+    color: #183126;
+    font: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #5f997e;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(95, 153, 126, 0.15);
+}
+
+.field-error {
+    margin: 0;
+    color: #b44949;
+    font-size: 0.9rem;
+}
+
+.form-errors {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #fff2f2;
+    color: #a94444;
+}
+
 .profile-details {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -142,6 +219,27 @@
     overflow-wrap: anywhere;
 }
 
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 190px;
+    padding: 14px 24px;
+    border-radius: 16px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    background: linear-gradient(135deg, #2c694e, #5d9a7c);
+    color: #ffffff;
+    box-shadow: 0 14px 30px rgba(44, 105, 78, 0.2);
+}
+
 @media (max-width: 900px) {
     .profile-layout {
         grid-template-columns: 1fr;
@@ -149,7 +247,16 @@
 }
 
 @media (max-width: 640px) {
+    .field-row,
     .profile-details {
         grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        justify-content: stretch;
+    }
+
+    .btn-primary {
+        width: 100%;
     }
 }

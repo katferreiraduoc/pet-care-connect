@@ -78,3 +78,39 @@ class CustomAuthenticationForm(AuthenticationForm):
                     "placeholder": placeholders.get(field_name, ""),
                 }
             )
+
+
+class PerfilUsuarioForm(forms.ModelForm):
+    email = forms.EmailField(label="Correo electronico")
+    telefono = forms.CharField(max_length=20, required=False, label="Telefono")
+
+    class Meta:
+        model = Usuario
+        fields = ("email", "telefono")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        placeholders = {
+            "email": "tucorreo@ejemplo.com",
+            "telefono": "+56 9 1234 5678",
+        }
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update(
+                {
+                    "class": "form-input",
+                    "placeholder": placeholders.get(field_name, ""),
+                }
+            )
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
+
+        if (
+            Usuario.objects.filter(email__iexact=email)
+            .exclude(pk=self.instance.pk)
+            .exists()
+        ):
+            raise forms.ValidationError("Ya existe una cuenta registrada con este correo.")
+
+        return email
