@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Eliminar {{ mascota.nombre }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/mis_mascotas.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail_views.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="pets-page detail-page">
+    <div class="pets-hero detail-hero">
+        <div>
+            <p class="pets-kicker">Confirmación</p>
+            <h1>Eliminar {{ mascota.nombre }}</h1>
+            <p class="pets-copy">Esta acción eliminará la mascota de tu cuenta y dejará de aparecer en tu listado.</p>
+        </div>
+        <div class="detail-hero-actions">
+            <a class="detail-secondary-action" href="{% url 'detalle_mascota' mascota.id %}">Volver al perfil</a>
+        </div>
+    </div>
+
+    <div class="pets-grid">
+        <article class="pet-card">
+            <div class="pet-card-body">
+                <div class="detail-text-block">
+                    <h2>¿Quieres continuar?</h2>
+                    <p>Confirma la eliminación de <strong>{{ mascota.nombre }}</strong>. Este cambio se aplicará inmediatamente en tu listado.</p>
+                </div>
+
+                <dl class="pets-summary delete-summary">
+                    <article class="summary-card">
+                        <span class="summary-label">Nombre</span>
+                        <strong>{{ mascota.nombre }}</strong>
+                        <p>Perfil seleccionado</p>
+                    </article>
+                    <article class="summary-card warm">
+                        <span class="summary-label">Especie</span>
+                        <strong>{{ mascota.especie|title }}</strong>
+                        <p>Datos actuales del registro</p>
+                    </article>
+                </dl>
+
+                <form method="post" class="delete-form">
+                    {% csrf_token %}
+                    <a class="detail-secondary-action" href="{% url 'detalle_mascota' mascota.id %}">Cancelar</a>
+                    <button type="submit" class="detail-danger-action detail-danger-button">Sí, eliminar mascota</button>
+                </form>
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}

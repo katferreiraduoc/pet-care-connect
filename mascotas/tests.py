@@ -49,6 +49,7 @@ class ProtectedViewsAccessTests(TestCase):
             reverse("mis_mascotas"),
             reverse("detalle_mascota", args=[self.mascota.id]),
             reverse("editar_mascota", args=[self.mascota.id]),
+            reverse("eliminar_mascota", args=[self.mascota.id]),
             reverse("citas"),
             reverse("detalle_cita", args=[self.cita.id]),
             reverse("registros_medicos"),
@@ -312,6 +313,66 @@ class EditarMascotaViewTests(TestCase):
         response = self.client.get(reverse("editar_mascota", args=[self.mascota_ajena.id]))
 
         self.assertEqual(response.status_code, 404)
+
+
+class EliminarMascotaViewTests(TestCase):
+    def setUp(self):
+        self.usuario = Usuario.objects.create_user(
+            username="eliminar-mascota",
+            password="testpass123",
+        )
+        self.otro_usuario = Usuario.objects.create_user(
+            username="otro-eliminar",
+            password="testpass123",
+        )
+        self.client.force_login(self.usuario)
+        self.mascota = Mascota.objects.create(
+            usuario=self.usuario,
+            nombre="Luna",
+            especie="gato",
+            sexo="hembra",
+        )
+        self.mascota_ajena = Mascota.objects.create(
+            usuario=self.otro_usuario,
+            nombre="Rocky",
+            especie="perro",
+            sexo="macho",
+        )
+
+    def test_confirmacion_eliminar_mascota_esta_disponible(self):
+        response = self.client.get(reverse("eliminar_mascota", args=[self.mascota.id]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Eliminar Luna")
+        self.assertContains(response, "¿Quieres continuar?")
+        self.assertContains(response, 'method="post"', html=False)
+
+    def test_eliminacion_mascota_requiere_confirmacion_por_post(self):
+        self.client.get(reverse("eliminar_mascota", args=[self.mascota.id]))
+
+        self.assertTrue(
+            Mascota.objects.filter(id=self.mascota.id, usuario=self.usuario).exists()
+        )
+
+    def test_eliminar_mascota_la_quita_del_listado_del_usuario(self):
+        response = self.client.post(
+            reverse("eliminar_mascota", args=[self.mascota.id]),
+            follow=True,
+        )
+
+        self.assertRedirects(response, reverse("mis_mascotas"))
+        self.assertFalse(Mascota.objects.filter(id=self.mascota.id).exists())
+        self.assertEqual(len(response.context["mascotas"]), 0)
+        mensajes = list(response.context["messages"])
+        self.assertTrue(any("fue eliminada correctamente" in str(m) for m in mensajes))
+
+    def test_usuario_no_puede_eliminar_mascota_ajena(self):
+        response = self.client.post(
+            reverse("eliminar_mascota", args=[self.mascota_ajena.id])
+        )
+
+        self.assertEqual(response.status_code, 404)
+        self.assertTrue(Mascota.objects.filter(id=self.mascota_ajena.id).exists())
 
 
 class DietaViewTests(TestCase):

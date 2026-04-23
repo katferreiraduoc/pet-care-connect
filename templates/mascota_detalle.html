@@ -18,6 +18,7 @@
         </div>
         <div class="detail-hero-actions">
             <a class="detail-secondary-action" href="{% url 'editar_mascota' mascota.id %}">Editar mascota</a>
+            <a class="detail-danger-action" href="{% url 'eliminar_mascota' mascota.id %}">Eliminar mascota</a>
             <a class="pets-add-button" href="{% url 'mis_mascotas' %}">Volver al listado</a>
         </div>
     </div>

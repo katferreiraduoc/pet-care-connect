@@ -114,6 +114,22 @@ def editar_mascota(request, mascota_id):
         },
     )
 
+
+@login_required
+def eliminar_mascota(request, mascota_id):
+    mascota = get_object_or_404(Mascota, id=mascota_id, usuario=request.user)
+
+    if request.method == "POST":
+        nombre_mascota = mascota.nombre
+        mascota.delete()
+        messages.success(
+            request, f"{nombre_mascota} fue eliminada correctamente de tu listado."
+        )
+        return redirect("mis_mascotas")
+
+    return render(request, "mascota_confirm_delete.html", {"mascota": mascota})
+
+
 @login_required
 def detalle_cita(request, cita_id):
     cita = get_object_or_404(

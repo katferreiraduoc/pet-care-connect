@@ -26,6 +26,19 @@
     text-decoration: none;
 }
 
+.detail-danger-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 22px;
+    border-radius: 18px;
+    background: #fff2f2;
+    color: #a94444;
+    font-weight: 800;
+    text-decoration: none;
+    border: 1px solid rgba(212, 110, 110, 0.35);
+}
+
 .detail-layout {
     align-items: start;
 }
@@ -60,9 +73,34 @@
     line-height: 1.75;
 }
 
+.delete-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.delete-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.detail-danger-button {
+    border: none;
+    cursor: pointer;
+    font: inherit;
+}
+
 @media (max-width: 900px) {
     .detail-hero-actions {
         width: 100%;
+        justify-content: flex-start;
+    }
+
+    .delete-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .delete-form {
         justify-content: flex-start;
     }
 }
