@@ -48,6 +48,7 @@ class ProtectedViewsAccessTests(TestCase):
             reverse("agregar_mascota"),
             reverse("mis_mascotas"),
             reverse("detalle_mascota", args=[self.mascota.id]),
+            reverse("editar_mascota", args=[self.mascota.id]),
             reverse("citas"),
             reverse("detalle_cita", args=[self.cita.id]),
             reverse("registros_medicos"),
@@ -221,6 +222,94 @@ class MisMascotasViewTests(TestCase):
 
     def test_usuario_no_puede_acceder_al_detalle_de_mascota_ajena(self):
         response = self.client.get(reverse("detalle_mascota", args=[self.mascota_ajena.id]))
+
+        self.assertEqual(response.status_code, 404)
+
+
+class EditarMascotaViewTests(TestCase):
+    def setUp(self):
+        self.usuario = Usuario.objects.create_user(
+            username="editar-mascota",
+            password="testpass123",
+        )
+        self.otro_usuario = Usuario.objects.create_user(
+            username="otro-editar",
+            password="testpass123",
+        )
+        self.client.force_login(self.usuario)
+        self.mascota = Mascota.objects.create(
+            usuario=self.usuario,
+            nombre="Luna",
+            especie="gato",
+            raza="Siames",
+            sexo="hembra",
+            fecha_nacimiento="2022-04-10",
+            peso="4.80",
+        )
+        self.mascota_ajena = Mascota.objects.create(
+            usuario=self.otro_usuario,
+            nombre="Rocky",
+            especie="perro",
+            sexo="macho",
+        )
+
+    def get_valid_payload(self, **overrides):
+        payload = {
+            "nombre": "Mora",
+            "especie": "perro",
+            "raza": "Beagle",
+            "fecha_nacimiento": "2021-08-15",
+            "sexo": "hembra",
+            "peso": "8.3",
+        }
+        payload.update(overrides)
+        return payload
+
+    def test_formulario_editar_mascota_esta_disponible_para_dueno(self):
+        response = self.client.get(reverse("editar_mascota", args=[self.mascota.id]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Editar Mascota")
+        self.assertContains(response, 'name="nombre"', html=False)
+        self.assertContains(response, "Luna")
+
+    def test_edicion_mascota_actualiza_datos_y_redirige_a_detalle(self):
+        response = self.client.post(
+            reverse("editar_mascota", args=[self.mascota.id]),
+            self.get_valid_payload(),
+            follow=True,
+        )
+
+        self.assertRedirects(response, reverse("detalle_mascota", args=[self.mascota.id]))
+        self.mascota.refresh_from_db()
+        self.assertEqual(self.mascota.nombre, "Mora")
+        self.assertEqual(self.mascota.especie, "perro")
+        self.assertEqual(self.mascota.raza, "Beagle")
+        self.assertEqual(str(self.mascota.peso), "8.30")
+        self.assertContains(response, "Mora")
+        self.assertContains(response, "Beagle")
+        mensajes = list(response.context["messages"])
+        self.assertTrue(
+            any("se actualizaron correctamente" in str(m) for m in mensajes)
+        )
+
+    def test_edicion_invalida_no_guarda_cambios_y_muestra_error(self):
+        response = self.client.post(
+            reverse("editar_mascota", args=[self.mascota.id]),
+            self.get_valid_payload(nombre=""),
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.mascota.refresh_from_db()
+        self.assertEqual(self.mascota.nombre, "Luna")
+        self.assertIn("nombre", response.context["form"].errors)
+        self.assertContains(
+            response,
+            "Revisa los datos del formulario antes de guardar.",
+        )
+
+    def test_usuario_no_puede_editar_mascota_ajena(self):
+        response = self.client.get(reverse("editar_mascota", args=[self.mascota_ajena.id]))
 
         self.assertEqual(response.status_code, 404)
 

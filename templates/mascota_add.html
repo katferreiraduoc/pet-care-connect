@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Añadir Mascota{% endblock %}
+{% block title %}{% if is_edit_mode %}Editar Mascota{% else %}Añadir Mascota{% endif %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/mascota_add.css' %}">
@@ -11,8 +11,14 @@
 <div class="contenedor-form">
 
     <div class="form-header">
-        <h2>Añadir Nueva Mascota</h2>
-        <p>Completa el perfil de tu compañero para recibir seguimiento de salud.</p>
+        <h2>{% if is_edit_mode %}Editar Mascota{% else %}Añadir Nueva Mascota{% endif %}</h2>
+        <p>
+            {% if is_edit_mode %}
+            Actualiza el perfil de tu compañero para mantener su información al día.
+            {% else %}
+            Completa el perfil de tu compañero para recibir seguimiento de salud.
+            {% endif %}
+        </p>
     </div>
 
     {% if messages %}
@@ -42,7 +48,13 @@
 
             <div class="card consejo">
                 <h4>Consejo</h4>
-                <p>El peso ayuda a calcular dieta y medicamentos automáticamente.</p>
+                <p>
+                    {% if is_edit_mode %}
+                    Revisa estos datos cada vez que haya cambios de peso, edad o características importantes.
+                    {% else %}
+                    El peso ayuda a calcular dieta y medicamentos automáticamente.
+                    {% endif %}
+                </p>
             </div>
 
             {% if form.non_field_errors %}
@@ -131,8 +143,8 @@
             </div>
 
             <div class="acciones">
-                <a class="btn-secundario" href="{% url 'panel_control' %}">Cancelar</a>
-                <button type="submit" class="btn-primary">Guardar Mascota</button>
+                <a class="btn-secundario" href="{% if is_edit_mode %}{% url 'detalle_mascota' mascota.id %}{% else %}{% url 'panel_control' %}{% endif %}">Cancelar</a>
+                <button type="submit" class="btn-primary">{% if is_edit_mode %}Guardar cambios{% else %}Guardar Mascota{% endif %}</button>
             </div>
 
         </div>

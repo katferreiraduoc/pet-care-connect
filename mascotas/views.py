@@ -86,6 +86,33 @@ def detalle_mascota(request, mascota_id):
     }
     return render(request, "mascota_detalle.html", context)
 
+@login_required
+def editar_mascota(request, mascota_id):
+    mascota = get_object_or_404(Mascota, id=mascota_id, usuario=request.user)
+
+    if request.method == "POST":
+        form = MascotaForm(request.POST, instance=mascota)
+        if form.is_valid():
+            mascota = form.save(commit=False)
+            mascota.usuario = request.user
+            mascota.save()
+            messages.success(
+                request, f"Los datos de {mascota.nombre} se actualizaron correctamente."
+            )
+            return redirect("detalle_mascota", mascota_id=mascota.id)
+        messages.error(request, "Revisa los datos del formulario antes de guardar.")
+    else:
+        form = MascotaForm(instance=mascota)
+
+    return render(
+        request,
+        "mascota_add.html",
+        {
+            "form": form,
+            "is_edit_mode": True,
+            "mascota": mascota,
+        },
+    )
 
 @login_required
 def detalle_cita(request, cita_id):

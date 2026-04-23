@@ -5,18 +5,30 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/mis_mascotas.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail_views.css' %}">
 {% endblock %}
 
 {% block content %}
-<section class="pets-page">
-    <div class="pets-hero">
+<section class="pets-page detail-page">
+    <div class="pets-hero detail-hero">
         <div>
             <p class="pets-kicker">Perfil de mascota</p>
             <h1>{{ mascota.nombre }}</h1>
             <p class="pets-copy">Consulta los datos principales del perfil y mantén a mano la información más importante de tu compañero.</p>
         </div>
-        <a class="pets-add-button" href="{% url 'mis_mascotas' %}">Volver al listado</a>
+        <div class="detail-hero-actions">
+            <a class="detail-secondary-action" href="{% url 'editar_mascota' mascota.id %}">Editar mascota</a>
+            <a class="pets-add-button" href="{% url 'mis_mascotas' %}">Volver al listado</a>
+        </div>
     </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <div class="pets-grid">
         <article class="pet-card">
