@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
@@ -26,6 +27,11 @@ def registro(request):
         form = RegistroUsuarioForm()
 
     return render(request, "usuarios/register.html", {"form": form})
+
+
+@login_required
+def perfil(request):
+    return render(request, "usuarios/perfil.html", {"usuario": request.user})
 
 def api_veterinarias(request):
     vets = Veterinaria.objects.exclude(latitud__isnull=True).exclude(

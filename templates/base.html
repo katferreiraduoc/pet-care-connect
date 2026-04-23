@@ -73,6 +73,12 @@
         Veterinarias Cercanas
     </a>
 
+    <a href="{% url 'perfil' %}" 
+        class="{% if request.resolver_match.url_name == 'perfil' %}active{% endif %}">
+        <span class="material-symbols-outlined">account_circle</span>
+        Perfil
+    </a>
+
 </nav>
 
     <div class="bottom-menu">
@@ -108,7 +114,7 @@
             <span class="material-symbols-outlined icon">notifications</span>
             <span class="material-symbols-outlined icon">help</span>
 
-            <div class="user">
+            <a class="user user-link" href="{% url 'perfil' %}">
                 <div>
                     <strong>
                         {% if request.user.is_authenticated %}
@@ -126,7 +132,7 @@
                     </p>
                 </div>
                 <img src="https://i.pravatar.cc/40">
-            </div>
+            </a>
 
         </div>
 

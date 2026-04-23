@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mi Perfil{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/perfil.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="profile-page">
+    <div class="profile-hero">
+        <div>
+            <p class="profile-kicker">Cuenta de usuario</p>
+            <h1>Mi Perfil</h1>
+            <p class="profile-copy">Consulta los datos registrados en Pet Care Connect para tu cuenta.</p>
+        </div>
+    </div>
+
+    <div class="profile-layout">
+        <section class="profile-card profile-summary">
+            <div class="profile-avatar">
+                {{ usuario.first_name|default:usuario.username|first|upper }}
+            </div>
+            <h2>
+                {% if usuario.get_full_name %}
+                    {{ usuario.get_full_name }}
+                {% else %}
+                    {{ usuario.username }}
+                {% endif %}
+            </h2>
+            <p>{{ usuario.email|default:"Correo no registrado" }}</p>
+            <span class="profile-role">
+                {% if usuario.rol %}
+                    {{ usuario.rol.nombre }}
+                {% else %}
+                    Usuario
+                {% endif %}
+            </span>
+        </section>
+
+        <section class="profile-card">
+            <div class="section-head">
+                <div>
+                    <h2>Datos basicos</h2>
+                    <p>Informacion asociada al usuario autenticado.</p>
+                </div>
+            </div>
+
+            <dl class="profile-details">
+                <div>
+                    <dt>Nombre</dt>
+                    <dd>{{ usuario.first_name|default:"Sin nombre registrado" }}</dd>
+                </div>
+                <div>
+                    <dt>Apellido</dt>
+                    <dd>{{ usuario.last_name|default:"Sin apellido registrado" }}</dd>
+                </div>
+                <div>
+                    <dt>Correo</dt>
+                    <dd>{{ usuario.email|default:"Sin correo registrado" }}</dd>
+                </div>
+                <div>
+                    <dt>Usuario</dt>
+                    <dd>{{ usuario.username }}</dd>
+                </div>
+                <div>
+                    <dt>Telefono</dt>
+                    <dd>{{ usuario.telefono|default:"Sin telefono registrado" }}</dd>
+                </div>
+                <div>
+                    <dt>Rol</dt>
+                    <dd>
+                        {% if usuario.rol %}
+                            {{ usuario.rol.nombre }}
+                        {% else %}
+                            Sin rol asignado
+                        {% endif %}
+                    </dd>
+                </div>
+            </dl>
+        </section>
+    </div>
+</section>
+{% endblock %}

@@ -137,6 +137,52 @@ class InicioSesionTests(TestCase):
         self.assertTrue(response.context["form"].non_field_errors())
 
 
+class PerfilUsuarioTests(TestCase):
+    def setUp(self):
+        self.usuario = Usuario.objects.create_user(
+            username="kathy.petlover",
+            email="kathy@example.com",
+            password="ClaveSegura123!",
+            first_name="Kathy",
+            last_name="Gonzalez",
+            telefono="+56 9 1234 5678",
+        )
+
+    def test_perfil_requiere_autenticacion(self):
+        response = self.client.get(reverse("perfil"))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("login"), response.url)
+
+    def test_perfil_muestra_datos_del_usuario_autenticado(self):
+        otro_usuario = Usuario.objects.create_user(
+            username="otro.usuario",
+            email="otro@example.com",
+            password="ClaveSegura123!",
+            first_name="Otro",
+            last_name="Usuario",
+        )
+        self.client.force_login(self.usuario)
+
+        response = self.client.get(reverse("perfil"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Kathy")
+        self.assertContains(response, "Gonzalez")
+        self.assertContains(response, "kathy@example.com")
+        self.assertContains(response, "+56 9 1234 5678")
+        self.assertContains(response, "kathy.petlover")
+        self.assertNotContains(response, otro_usuario.email)
+
+    def test_menu_incluye_acceso_al_perfil(self):
+        self.client.force_login(self.usuario)
+
+        response = self.client.get(reverse("perfil"))
+
+        self.assertContains(response, 'href="/perfil/"', html=False)
+        self.assertContains(response, "Perfil")
+
+
 class CerrarSesionTests(TestCase):
     def setUp(self):
         self.password = "ClaveSegura123!"
