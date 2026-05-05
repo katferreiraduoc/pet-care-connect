@@ -20,6 +20,8 @@
             </p>
         </div>
         <div class="detail-hero-actions">
+            <a href="{% url 'editar_tratamiento' tratamiento.id %}" class="detail-secondary-action">Editar tratamiento</a>
+            <a href="{% url 'eliminar_tratamiento' tratamiento.id %}" class="detail-danger-action">Eliminar tratamiento</a>
             <a href="{% url 'registros_medicos' %}?pet={{ tratamiento.atencion_medica.mascota.id }}" class="hero-action">Volver a registros</a>
         </div>
     </div>

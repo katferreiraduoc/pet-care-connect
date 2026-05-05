@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Eliminar alimentación{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/panel_control.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail_views.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-page detail-page">
+    <div class="dashboard-hero detail-hero">
+        <div>
+            <p class="dashboard-kicker">Confirmación</p>
+            <h1>Eliminar alimentación</h1>
+            <p class="dashboard-copy">Esta acción quitará el registro del historial de dieta de tu mascota.</p>
+        </div>
+        <div class="detail-hero-actions">
+            <a class="detail-secondary-action" href="{% url 'detalle_alimentacion' registro.id %}">Volver al detalle</a>
+        </div>
+    </div>
+
+    <section class="dashboard-card detail-confirm-card">
+        <div class="detail-text-block">
+            <h2>¿Quieres continuar?</h2>
+            <p>Confirma la eliminación del registro <strong>{{ registro.tipo_alimento|default:"Alimentación registrada" }}</strong> de <strong>{{ registro.mascota.nombre }}</strong>.</p>
+        </div>
+
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <a class="detail-secondary-action" href="{% url 'detalle_alimentacion' registro.id %}">Cancelar</a>
+            <button type="submit" class="detail-danger-action detail-danger-button">Sí, eliminar alimentación</button>
+        </form>
+    </section>
+</section>
+{% endblock %}

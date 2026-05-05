@@ -84,6 +84,30 @@
     gap: 12px;
 }
 
+.detail-form-card,
+.detail-confirm-card {
+    max-width: 920px;
+    margin: 0 auto;
+}
+
+.detail-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.inline-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.inline-actions a:last-child {
+    color: #a94444;
+}
+
 .detail-danger-button {
     border: none;
     cursor: pointer;
@@ -101,6 +125,10 @@
     }
 
     .delete-form {
+        justify-content: flex-start;
+    }
+
+    .detail-form-actions {
         justify-content: flex-start;
     }
 }

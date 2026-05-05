@@ -44,6 +44,10 @@ class CitaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if usuario is not None:
             self.fields["mascota"].queryset = Mascota.objects.filter(usuario=usuario)
+        if self.instance and self.instance.pk:
+            fecha_cita = timezone.localtime(self.instance.fecha_cita)
+            self.fields["fecha"].initial = fecha_cita.date()
+            self.fields["hora"].initial = fecha_cita.time().replace(second=0, microsecond=0)
 
     def save(self, commit=True):
         cita = super().save(commit=False)
@@ -57,6 +61,22 @@ class CitaForm(forms.ModelForm):
         if commit:
             cita.save()
         return cita
+
+
+class CitaEditForm(CitaForm):
+    class Meta(CitaForm.Meta):
+        fields = [
+            "mascota",
+            "motivo",
+            "clinica",
+            "veterinario",
+            "estado",
+            "observaciones",
+        ]
+        widgets = {
+            **CitaForm.Meta.widgets,
+            "estado": forms.Select(attrs={"class": "form-input"}),
+        }
 
 
 class RegistroMedicoForm(forms.ModelForm):

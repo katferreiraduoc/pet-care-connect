@@ -171,7 +171,11 @@
                             {% if cita.clinica %}
                             <small>{{ cita.clinica }}</small>
                             {% endif %}
-                            <p><a href="{% url 'detalle_cita' cita.id %}">Ver detalle</a></p>
+                            <p class="inline-actions">
+                                <a href="{% url 'detalle_cita' cita.id %}">Ver detalle</a>
+                                <a href="{% url 'editar_cita' cita.id %}">Editar</a>
+                                <a href="{% url 'eliminar_cita' cita.id %}">Eliminar</a>
+                            </p>
                         </div>
                     </article>
                     {% empty %}

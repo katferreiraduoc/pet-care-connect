@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Eliminar cita{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/panel_control.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail_views.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-page detail-page">
+    <div class="dashboard-hero detail-hero">
+        <div>
+            <p class="dashboard-kicker">Confirmación</p>
+            <h1>Eliminar cita</h1>
+            <p class="dashboard-copy">Esta acción quitará la cita de tu calendario y listado de próximas visitas.</p>
+        </div>
+        <div class="detail-hero-actions">
+            <a class="detail-secondary-action" href="{% url 'detalle_cita' cita.id %}">Volver al detalle</a>
+        </div>
+    </div>
+
+    <section class="dashboard-card detail-confirm-card">
+        <div class="detail-text-block">
+            <h2>¿Quieres continuar?</h2>
+            <p>Confirma la eliminación de la cita de <strong>{{ cita.mascota.nombre }}</strong> para el <strong>{{ cita.fecha_cita|date:"d/m/Y H:i" }}</strong>.</p>
+        </div>
+
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <a class="detail-secondary-action" href="{% url 'detalle_cita' cita.id %}">Cancelar</a>
+            <button type="submit" class="detail-danger-action detail-danger-button">Sí, eliminar cita</button>
+        </form>
+    </section>
+</section>
+{% endblock %}

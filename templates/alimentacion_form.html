@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar alimentación{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dieta.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail_views.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="diet-page detail-page">
+    <div class="diet-header detail-hero">
+        <div>
+            <p class="diet-kicker">Alimentación registrada</p>
+            <h1>Editar alimentación</h1>
+            <p class="diet-copy">Actualiza alimento, marca, cantidad, frecuencia, horario y observaciones.</p>
+        </div>
+        <div class="detail-hero-actions">
+            <a href="{% url 'detalle_alimentacion' registro.id %}" class="detail-secondary-action">Cancelar</a>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <section class="diet-side-card detail-form-card">
+        <form method="post" class="diet-form" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="form-errors">
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="field-group">
+                <label for="{{ form.mascota.id_for_label }}">Mascota</label>
+                {{ form.mascota }}
+                {% for error in form.mascota.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div class="field-row">
+                <div class="field-group">
+                    <label for="{{ form.tipo_alimento.id_for_label }}">Tipo de alimento</label>
+                    {{ form.tipo_alimento }}
+                    {% for error in form.tipo_alimento.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-group">
+                    <label for="{{ form.marca.id_for_label }}">Marca</label>
+                    {{ form.marca }}
+                    {% for error in form.marca.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field-group">
+                    <label for="{{ form.cantidad.id_for_label }}">Cantidad</label>
+                    {{ form.cantidad }}
+                    {% for error in form.cantidad.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-group">
+                    <label for="{{ form.frecuencia.id_for_label }}">Frecuencia</label>
+                    {{ form.frecuencia }}
+                    {% for error in form.frecuencia.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.horario.id_for_label }}">Horario</label>
+                {{ form.horario }}
+                {% for error in form.horario.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.observaciones.id_for_label }}">Observaciones</label>
+                {{ form.observaciones }}
+                {% for error in form.observaciones.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div class="detail-form-actions">
+                <a href="{% url 'detalle_alimentacion' registro.id %}" class="detail-secondary-action">Cancelar</a>
+                <button type="submit" class="diet-submit">Guardar cambios</button>
+            </div>
+        </form>
+    </section>
+</section>
+{% endblock %}

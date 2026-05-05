@@ -20,6 +20,8 @@
             </p>
         </div>
         <div class="detail-hero-actions">
+            <a href="{% url 'editar_cita' cita.id %}" class="detail-secondary-action">Editar cita</a>
+            <a href="{% url 'eliminar_cita' cita.id %}" class="detail-danger-action">Eliminar cita</a>
             <a href="{% url 'citas' %}" class="hero-action">Volver a citas</a>
         </div>
     </div>
@@ -146,6 +148,14 @@
                             <h3>Volver al calendario</h3>
                             <p>Regresa al listado y calendario de citas del usuario.</p>
                             <a href="{% url 'citas' %}">Ir a citas</a>
+                        </div>
+                    </article>
+                    <article class="alert-item soft">
+                        <div class="alert-dot"></div>
+                        <div class="alert-body">
+                            <h3>Editar o eliminar</h3>
+                            <p>Actualiza los datos de la cita o quítala del calendario.</p>
+                            <a href="{% url 'editar_cita' cita.id %}">Editar</a>
                         </div>
                     </article>
                 </div>

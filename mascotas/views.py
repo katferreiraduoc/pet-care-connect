@@ -9,8 +9,9 @@ from django.urls import reverse
 from django.utils import timezone
 from xhtml2pdf import pisa
 
-from citas.forms import CitaForm, RegistroMedicoForm
+from citas.forms import CitaEditForm, CitaForm, RegistroMedicoForm
 from citas.models import AtencionMedica, Cita
+from tratamientos.forms import TratamientoForm
 from tratamientos.models import Tratamiento
 
 from .forms import AlimentacionForm, MascotaForm
@@ -141,6 +142,47 @@ def detalle_cita(request, cita_id):
 
 
 @login_required
+def editar_cita(request, cita_id):
+    cita = get_object_or_404(
+        Cita.objects.select_related("mascota"),
+        id=cita_id,
+        mascota__usuario=request.user,
+    )
+
+    if request.method == "POST":
+        form = CitaEditForm(request.POST, usuario=request.user, instance=cita)
+        if form.is_valid():
+            cita = form.save()
+            messages.success(request, "La cita se actualizó correctamente.")
+            return redirect("detalle_cita", cita_id=cita.id)
+        messages.error(request, "Revisa los datos de la cita antes de guardar.")
+    else:
+        form = CitaEditForm(usuario=request.user, instance=cita)
+
+    return render(
+        request,
+        "cita_form.html",
+        {"form": form, "cita": cita, "is_edit_mode": True},
+    )
+
+
+@login_required
+def eliminar_cita(request, cita_id):
+    cita = get_object_or_404(
+        Cita.objects.select_related("mascota"),
+        id=cita_id,
+        mascota__usuario=request.user,
+    )
+
+    if request.method == "POST":
+        cita.delete()
+        messages.success(request, "La cita fue eliminada correctamente.")
+        return redirect("citas")
+
+    return render(request, "cita_confirm_delete.html", {"cita": cita})
+
+
+@login_required
 def detalle_tratamiento(request, tratamiento_id):
     tratamiento = get_object_or_404(
         Tratamiento.objects.select_related("atencion_medica__mascota"),
@@ -151,6 +193,52 @@ def detalle_tratamiento(request, tratamiento_id):
 
 
 @login_required
+def editar_tratamiento(request, tratamiento_id):
+    tratamiento = get_object_or_404(
+        Tratamiento.objects.select_related("atencion_medica__mascota"),
+        id=tratamiento_id,
+        atencion_medica__mascota__usuario=request.user,
+    )
+
+    if request.method == "POST":
+        form = TratamientoForm(request.POST, instance=tratamiento)
+        if form.is_valid():
+            tratamiento = form.save()
+            messages.success(request, "El tratamiento se actualizó correctamente.")
+            return redirect("detalle_tratamiento", tratamiento_id=tratamiento.id)
+        messages.error(request, "Revisa los datos del tratamiento antes de guardar.")
+    else:
+        form = TratamientoForm(instance=tratamiento)
+
+    return render(
+        request,
+        "tratamiento_form.html",
+        {"form": form, "tratamiento": tratamiento, "is_edit_mode": True},
+    )
+
+
+@login_required
+def eliminar_tratamiento(request, tratamiento_id):
+    tratamiento = get_object_or_404(
+        Tratamiento.objects.select_related("atencion_medica__mascota"),
+        id=tratamiento_id,
+        atencion_medica__mascota__usuario=request.user,
+    )
+    mascota_id = tratamiento.atencion_medica.mascota_id
+
+    if request.method == "POST":
+        tratamiento.delete()
+        messages.success(request, "El tratamiento fue eliminado correctamente.")
+        return HttpResponseRedirect(f"{reverse('registros_medicos')}?pet={mascota_id}")
+
+    return render(
+        request,
+        "tratamiento_confirm_delete.html",
+        {"tratamiento": tratamiento},
+    )
+
+
+@login_required
 def detalle_alimentacion(request, alimentacion_id):
     registro = get_object_or_404(
         Alimentacion.objects.select_related("mascota"),
@@ -158,6 +246,61 @@ def detalle_alimentacion(request, alimentacion_id):
         mascota__usuario=request.user,
     )
     return render(request, "alimentacion_detalle.html", {"registro": registro})
+
+
+@login_required
+def editar_alimentacion(request, alimentacion_id):
+    registro = get_object_or_404(
+        Alimentacion.objects.select_related("mascota"),
+        id=alimentacion_id,
+        mascota__usuario=request.user,
+    )
+
+    if request.method == "POST":
+        form = AlimentacionForm(
+            request.POST,
+            usuario=request.user,
+            selected_pet=registro.mascota,
+            instance=registro,
+        )
+        if form.is_valid():
+            registro = form.save()
+            messages.success(request, "El registro de alimentación se actualizó correctamente.")
+            return redirect("detalle_alimentacion", alimentacion_id=registro.id)
+        messages.error(request, "Revisa los datos de alimentación antes de guardar.")
+    else:
+        form = AlimentacionForm(
+            usuario=request.user,
+            selected_pet=registro.mascota,
+            instance=registro,
+        )
+
+    return render(
+        request,
+        "alimentacion_form.html",
+        {"form": form, "registro": registro, "is_edit_mode": True},
+    )
+
+
+@login_required
+def eliminar_alimentacion(request, alimentacion_id):
+    registro = get_object_or_404(
+        Alimentacion.objects.select_related("mascota"),
+        id=alimentacion_id,
+        mascota__usuario=request.user,
+    )
+    mascota_id = registro.mascota_id
+
+    if request.method == "POST":
+        registro.delete()
+        messages.success(request, "El registro de alimentación fue eliminado correctamente.")
+        return HttpResponseRedirect(f"{reverse('dieta')}?pet={mascota_id}")
+
+    return render(
+        request,
+        "alimentacion_confirm_delete.html",
+        {"registro": registro},
+    )
 
 
 @login_required

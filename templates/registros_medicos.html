@@ -92,6 +92,10 @@
                         {% if tratamiento.frecuencia %}
                         <small>{{ tratamiento.frecuencia }}</small>
                         {% endif %}
+                        <p class="inline-actions">
+                            <a href="{% url 'editar_tratamiento' tratamiento.id %}">Editar</a>
+                            <a href="{% url 'eliminar_tratamiento' tratamiento.id %}">Eliminar</a>
+                        </p>
                     </div>
                     {% empty %}
                     <p class="muted-text">No hay tratamientos activos en este momento.</p>

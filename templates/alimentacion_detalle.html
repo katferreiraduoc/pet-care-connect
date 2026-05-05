@@ -20,6 +20,8 @@
             </p>
         </div>
         <div class="detail-hero-actions">
+            <a href="{% url 'editar_alimentacion' registro.id %}" class="detail-secondary-action">Editar alimentación</a>
+            <a href="{% url 'eliminar_alimentacion' registro.id %}" class="detail-danger-action">Eliminar alimentación</a>
             <a href="{% url 'dieta' %}?pet={{ registro.mascota.id }}" class="hero-action">Volver a dieta</a>
         </div>
     </div>
@@ -146,6 +148,14 @@
                             <h3>Volver al historial</h3>
                             <p>Regresa al listado de dieta filtrado por esta mascota.</p>
                             <a href="{% url 'dieta' %}?pet={{ registro.mascota.id }}">Ir a dieta</a>
+                        </div>
+                    </article>
+                    <article class="alert-item soft">
+                        <div class="alert-dot"></div>
+                        <div class="alert-body">
+                            <h3>Editar o eliminar</h3>
+                            <p>Ajusta este registro alimenticio o quítalo del historial.</p>
+                            <a href="{% url 'editar_alimentacion' registro.id %}">Editar</a>
                         </div>
                     </article>
                 </div>

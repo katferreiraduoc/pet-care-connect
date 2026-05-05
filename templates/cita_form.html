@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar cita{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/citas.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail_views.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="appointments-page detail-page">
+    <div class="appointments-header detail-hero">
+        <div>
+            <p class="appointments-kicker">Cita veterinaria</p>
+            <h1>Editar cita</h1>
+            <p class="appointments-copy">Actualiza fecha, horario, motivo, estado y datos de la visita programada.</p>
+        </div>
+        <div class="detail-hero-actions">
+            <a href="{% url 'detalle_cita' cita.id %}" class="detail-secondary-action">Cancelar</a>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <section class="appointment-form-card detail-form-card">
+        <form method="post" class="appointment-form" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="form-errors">
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="field-group">
+                <label for="{{ form.mascota.id_for_label }}">Mascota</label>
+                {{ form.mascota }}
+                {% for error in form.mascota.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.motivo.id_for_label }}">Motivo</label>
+                {{ form.motivo }}
+                {% for error in form.motivo.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div class="field-row">
+                <div class="field-group">
+                    <label for="{{ form.fecha.id_for_label }}">Fecha</label>
+                    {{ form.fecha }}
+                    {% for error in form.fecha.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-group">
+                    <label for="{{ form.hora.id_for_label }}">Hora</label>
+                    {{ form.hora }}
+                    {% for error in form.hora.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field-group">
+                    <label for="{{ form.clinica.id_for_label }}">Clínica</label>
+                    {{ form.clinica }}
+                    {% for error in form.clinica.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+                <div class="field-group">
+                    <label for="{{ form.veterinario.id_for_label }}">Veterinario</label>
+                    {{ form.veterinario }}
+                    {% for error in form.veterinario.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.estado.id_for_label }}">Estado</label>
+                {{ form.estado }}
+                {% for error in form.estado.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.observaciones.id_for_label }}">Observaciones</label>
+                {{ form.observaciones }}
+                {% for error in form.observaciones.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div class="detail-form-actions">
+                <a href="{% url 'detalle_cita' cita.id %}" class="detail-secondary-action">Cancelar</a>
+                <button type="submit" class="appointment-submit">Guardar cambios</button>
+            </div>
+        </form>
+    </section>
+</section>
+{% endblock %}
