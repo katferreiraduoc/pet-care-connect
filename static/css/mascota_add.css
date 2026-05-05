@@ -217,3 +217,7 @@ label {
     margin-top: 0;
     flex: 1;
 }
+
+#id_foto {
+    display: none;
+}

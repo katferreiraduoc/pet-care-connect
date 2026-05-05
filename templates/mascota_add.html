@@ -29,21 +29,29 @@
     </div>
     {% endif %}
 
-    <form method="post" class="grid-form">
+    <form method="post" enctype="multipart/form-data" class="grid-form">
         {% csrf_token %}
 
         <div class="col-izq">
 
             <div class="card-foto">
-                <div class="foto-circle">
-                    <span class="material-symbols-outlined">add_a_photo</span>
+                <div class="foto-circle" id="fotoPreviewContainer">
+                    {% if is_edit_mode and mascota.foto %}
+                        <img id="fotoPreview" src="{{ mascota.foto.url }}"
+                            style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                    {% else %}
+                        <span class="material-symbols-outlined" id="fotoIcon">add_a_photo</span>
+                        <img id="fotoPreview" src="" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                    {% endif %}
                 </div>
-
                 <h3>Foto de Perfil</h3>
                 <div class="texto-avatar">
                     <p>Sube una imagen clara para que podamos identificar a tu mascota fácilmente.</p>
                 </div>
-                <button type="button" class="btn-primary" disabled>Próximamente</button>
+                <label for="{{ form.foto.id_for_label }}" class="btn-primary" style="cursor:pointer;">
+                    Seleccionar foto
+                </label>
+                {{ form.foto }}
             </div>
 
             <div class="card consejo">

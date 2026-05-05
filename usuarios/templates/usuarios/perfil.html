@@ -28,7 +28,12 @@
     <div class="profile-layout">
         <section class="profile-card profile-summary">
             <div class="profile-avatar">
-                {{ usuario.first_name|default:usuario.username|first|upper }}
+                {% if usuario.foto_perfil %}
+                <img src="{{ usuario.foto_perfil.url }}" alt="Foto de perfil"
+                    style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                {% else %}
+                    {{ usuario.first_name|default:usuario.username|first|upper }}
+                {% endif %}
             </div>
             <h2>
                 {% if usuario.get_full_name %}

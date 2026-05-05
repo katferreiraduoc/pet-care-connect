@@ -25,6 +25,7 @@ class MascotaForm(forms.ModelForm):
             "fecha_nacimiento",
             "sexo",
             "peso",
+            "foto",
         ]
         widgets = {
             "nombre": forms.TextInput(

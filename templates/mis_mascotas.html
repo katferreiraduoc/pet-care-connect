@@ -50,7 +50,13 @@
         {% for mascota in mascotas %}
         <article class="pet-card">
             <div class="pet-card-media">
-                <div class="pet-avatar">{{ mascota.inicial }}</div>
+            <div class="pet-avatar">
+                {% if mascota.foto %}
+                <img src="{{ mascota.foto.url }}" alt="{{ mascota.nombre }}">
+                {% else %}
+                {{ mascota.inicial }}
+                {% endif %}
+            </div>
                 <span class="pet-badge {% if mascota.especie == 'gato' %}cat{% else %}dog{% endif %}">
                     {{ mascota.especie_label }}
                 </span>

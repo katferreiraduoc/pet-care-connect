@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/config.css' %}">
+{% endblock %}
+
+{% block title %}Configuración{% endblock %}
+
+{% block content %}
+<div class="config-container">
+    <div class="config-card">
+        <h2>Configuración de Perfil</h2>
+        <p>Cambia tu foto de perfil</p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="mb-6">
+            <img id="preview"
+                 src="{% if request.user.foto_perfil %}{{ request.user.foto_perfil.url }}{% else %}https://cdn-icons-png.flaticon.com/512/149/149071.png{% endif %}"
+                 class="config-avatar">
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <input type="file" id="inputFoto" name="foto_perfil"
+                   accept="image/*" class="config-input">
+            <button type="submit" class="config-button">
+                Guardar cambios
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/config.js' %}"></script>
+{% endblock %}

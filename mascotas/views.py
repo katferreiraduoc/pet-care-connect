@@ -46,7 +46,7 @@ def _normalizar_fecha_actividad(valor):
 @login_required
 def agregar_mascota(request):
     if request.method == "POST":
-        form = MascotaForm(request.POST)
+        form = MascotaForm(request.POST, request.FILES)  
         if form.is_valid():
             mascota = form.save(commit=False)
             mascota.usuario = request.user
@@ -91,7 +91,7 @@ def editar_mascota(request, mascota_id):
     mascota = get_object_or_404(Mascota, id=mascota_id, usuario=request.user)
 
     if request.method == "POST":
-        form = MascotaForm(request.POST, instance=mascota)
+        form = MascotaForm(request.POST, request.FILES, instance=mascota)  
         if form.is_valid():
             mascota = form.save(commit=False)
             mascota.usuario = request.user

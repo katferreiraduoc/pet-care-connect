@@ -70,3 +70,15 @@ def api_veterinarias(request):
         for v in vets
     ]
     return JsonResponse(data, safe=False)
+
+@login_required
+def configuracion(request):
+    if request.method == 'POST':
+        foto = request.FILES.get('foto_perfil')
+        if foto:
+            request.user.foto_perfil = foto
+            request.user.save(update_fields=['foto_perfil'])
+            messages.success(request, 'Foto de perfil actualizada correctamente.')
+        else:
+            messages.error(request, 'Selecciona una imagen antes de guardar.')
+    return render(request, 'config.html')
